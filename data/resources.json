@@ -1,0 +1,13 @@
+{
+  "resources": [
+    {
+      "id": "1",
+      "title": "示例资源 - 破解版APP",
+      "description": "这是一个示例资源，展示网站的基本功能。你可以删除这个示例，添加自己的资源。",
+      "category": "cracked-app",
+      "downloadUrl": "https://pan.baidu.com/s/1xxxxx",
+      "imageUrl": "",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
