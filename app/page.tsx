@@ -9,23 +9,41 @@ type Resource = {
 };
 
 const initialResources: Resource[] = [
-  { 
-    title: "示例资源1", 
-    type: "app", 
+  {
+    title: "抖音破解版无水印",
+    type: "app",
     time: "2026-04-14",
-    linkUrl: "https://这里填你的链接"
+    linkUrl: "https://你的网盘/链接"
   },
-  { 
-    title: "示例资源2", 
-    type: "ai", 
+  {
+    title: "ChatGPT 4o 使用教程",
+    type: "ai",
     time: "2026-04-13",
-    linkUrl: "https://这里填你的链接"
+    linkUrl: "https://你的教程/链接"
   },
-  { 
-    title: "示例资源3", 
+  {
+    title: "小红书副业变现课",
     type: "side",
     time: "2026-04-12",
-    linkUrl: "https://这里填你的链接"
+    linkUrl: "https://你的课程/链接"
+  },
+  {
+    title: "PS 2025 永久激活版",
+    type: "app",
+    time: "2026-04-11",
+    linkUrl: "https://你的网盘/链接"
+  },
+  {
+    title: "AI绘画 Midjourney 教程",
+    type: "ai",
+    time: "2026-04-10",
+    linkUrl: "https://你的教程/链接"
+  },
+  {
+    title: "闲鱼无货源赚钱课",
+    type: "side",
+    time: "2026-04-09",
+    linkUrl: "https://你的课程/链接"
   },
 ];
 
@@ -45,7 +63,7 @@ export default function Home() {
   const getList = () => {
     let list = [...initialResources];
     if (currentCategory !== "all") list = list.filter(item => item.type === currentCategory);
-    if (currentKeyword) list = list.filter(item => item.title.includes(currentKeyword));
+    if (currentKeyword) list = list.filter(item => item.title.toLowerCase().includes(currentKeyword.toLowerCase()));
     return sortResources(list, currentSort);
   };
 
@@ -53,16 +71,12 @@ export default function Home() {
 
   return (
     <div className="container">
-      {/* 顶部横幅图片 */}
+      {/* 顶部横幅（不需要就删掉这段） */}
       <div className="top-banner">
-        <img 
-          src="https://你的顶部图片链接" 
-          alt="网站横幅" 
-          className="banner-img"
-        />
+        <img src="https://你的横幅图片链接" alt="格道资源站横幅" className="banner-img" />
       </div>
 
-      {/* 头部标题 */}
+      {/* 标题 */}
       <div className="site-header">
         <h1>🎯 格道资源站</h1>
         <p>分享破解版APP、AI教程、副业资源</p>
@@ -76,17 +90,17 @@ export default function Home() {
         <button className={`category-btn ${currentCategory === 'side' ? 'active' : ''}`} onClick={() => setCurrentCategory('side')}>💰 副业资源</button>
       </div>
 
-      {/* 搜索 + 排序 */}
+      {/* 搜索+排序 */}
       <div className="search-sort-bar">
         <input
           type="text"
           className="search-input"
           placeholder="🔍 输入资源名称搜索..."
           value={currentKeyword}
-          onInput={(e) => setCurrentKeyword(e.target.value)}
+          onChange={(e) => setCurrentKeyword(e.target.value)}
         />
         <div className="sort-group">
-          <button className={`sort-btn ${currentSort === 'time' ? 'active' : ''}`} onClick={() => setCurrentSort('time')}>⏰ 按时间排序</button>
+          <button className={`sort-btn ${currentSort === 'time' ? 'active' : ''}`} onClick={() => setCurrentSort('time')}>⏰ 按时间排序（最新置顶）</button>
           <button className={`sort-btn ${currentSort === 'name' ? 'active' : ''}`} onClick={() => setCurrentSort('name')}>🔤 按名称排序</button>
         </div>
       </div>
@@ -94,40 +108,39 @@ export default function Home() {
       {/* 资源列表 */}
       <div className="resource-list">
         {list.length === 0 ? (
-          <div className="empty-tip">暂无资源</div>
+          <div className="empty-tip">📭 暂无资源</div>
         ) : (
           list.map((item, idx) => {
-            const tagObj = {
-              app: { text: "破解APP", color: "#ff6b6b" },
-              ai: { text: "AI教程", color: "#4ecdc4" },
-              side: { text: "副业资源", color: "#45b7d1" }
-            };
+            const tagStyle = {
+              app: { bg: '#ff6b6b', text: '破解版APP' },
+              ai: { bg: '#4ecdc4', text: 'AI教程' },
+              side: { bg: '#45b7d1', text: '副业资源' }
+            }[item.type];
             return (
               <div key={idx} className="resource-item">
                 <h3>{item.title}</h3>
-                <span className="tag" style={{background: tagObj[item.type].color}}>{tagObj[item.type].text}</span>
+                <span className="tag" style={{ backgroundColor: tagStyle.bg }}>{tagStyle.text}</span>
                 <div className="time">更新时间：{item.time}</div>
-                <a href={item.linkUrl} target="_blank" rel="noopener noreferrer" className="link-btn">
-                  🔗 点击跳转
-                </a>
+                <a href={item.linkUrl} target="_blank" rel="noopener noreferrer" className="link-btn">🔗 点击跳转</a>
               </div>
-            )
+            );
           })
         )}
       </div>
 
-      {/* 底部免责声明（已加入你的邮箱） */}
+      {/* ✅ 底部免责声明（带你的邮箱） */}
       <div className="footer-declare">
-        本站所有资源均来自网络收集，仅供学习与交流使用，严禁商用。
+        本站所有资源均来自网络收集，仅供学习与交流使用，严禁商用。<br/>
         若内容涉及侵权，请联系站长邮箱：jinc56@cbb21.cc，我方将第一时间处理删除。
       </div>
 
+      {/* 全局样式 */}
       <style jsx global>{`
         * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
-          font-family: "Microsoft Yahei", sans-serif;
+          font-family: "Microsoft Yahei", Arial, sans-serif;
         }
         body {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -137,65 +150,76 @@ export default function Home() {
         .container {
           max-width: 1200px;
           margin: 0 auto;
+          text-align: center;
         }
+        /* 顶部横幅 */
         .top-banner {
           width: 100%;
+          margin-bottom: 30px;
           border-radius: 16px;
           overflow: hidden;
-          margin-bottom: 25px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         .banner-img {
           width: 100%;
           height: auto;
           display: block;
         }
+        /* 标题 */
         .site-header {
-          text-align: center;
-          color: #fff;
-          margin-bottom: 30px;
+          color: white;
+          margin-bottom: 40px;
         }
         .site-header h1 {
-          font-size: 38px;
-          margin-bottom: 10px;
+          font-size: 42px;
+          margin-bottom: 15px;
         }
         .site-header p {
-          font-size: 18px;
-          opacity: 0.9;
+          font-size: 22px;
+          opacity: 0.95;
         }
+        /* 分类导航 */
         .category-nav {
           display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
           justify-content: center;
-          margin-bottom: 20px;
+          gap: 15px;
+          flex-wrap: wrap;
+          margin-bottom: 25px;
         }
         .category-btn {
-          padding: 10px 22px;
+          padding: 14px 30px;
           border: none;
           border-radius: 30px;
-          font-size: 16px;
+          font-size: 18px;
           cursor: pointer;
+          transition: all 0.3s ease;
         }
         .category-btn.active {
-          background: #222;
-          color: #fff;
+          background: #333;
+          color: white;
         }
+        .category-btn:not(.active) {
+          background: white;
+          color: #333;
+        }
+        /* 搜索+排序 */
         .search-sort-bar {
-          background: #fff;
-          padding: 18px;
+          background: rgba(255,255,255,0.95);
+          padding: 20px;
           border-radius: 16px;
+          margin-bottom: 30px;
           display: flex;
           flex-wrap: wrap;
           gap: 15px;
           align-items: center;
           justify-content: center;
-          margin-bottom: 25px;
         }
         .search-input {
           flex: 1;
           min-width: 280px;
-          padding: 11px 16px;
-          border: 1px solid #eee;
+          max-width: 500px;
+          padding: 12px 18px;
+          border: 1px solid #ddd;
           border-radius: 30px;
           font-size: 16px;
           outline: none;
@@ -205,68 +229,85 @@ export default function Home() {
           gap: 10px;
         }
         .sort-btn {
-          padding: 9px 18px;
+          padding: 10px 20px;
           border: none;
           border-radius: 20px;
-          background: #f3f3f3;
+          background: #f0f0f0;
           cursor: pointer;
+          font-size: 15px;
         }
         .sort-btn.active {
           background: #667eea;
-          color: #fff;
+          color: white;
         }
+        /* 资源列表 */
         .resource-list {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
           gap: 20px;
+          margin-top: 20px;
         }
         .resource-item {
-          background: #fff;
-          padding: 20px;
+          background: white;
+          padding: 22px;
           border-radius: 14px;
+          text-align: left;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          transition: transform 0.2s;
+        }
+        .resource-item:hover {
+          transform: translateY(-3px);
         }
         .resource-item h3 {
-          font-size: 18px;
           color: #333;
-          margin-bottom: 8px;
+          font-size: 20px;
+          margin-bottom: 10px;
         }
         .tag {
-          font-size: 12px;
-          color: #fff;
-          padding: 3px 8px;
-          border-radius: 6px;
+          display: inline-block;
+          padding: 4px 10px;
+          border-radius: 12px;
+          font-size: 13px;
+          color: white;
+          margin-right: 8px;
         }
         .time {
           font-size: 13px;
-          color: #999;
-          margin: 10px 0;
+          color: #888;
+          margin: 12px 0;
         }
         .link-btn {
           display: block;
-          text-align: center;
+          width: 100%;
+          padding: 10px;
           background: #667eea;
-          color: #fff;
-          text-decoration: none;
-          padding: 9px;
+          color: white;
+          text-align: center;
           border-radius: 8px;
+          text-decoration: none;
           font-weight: bold;
+          margin-top: 10px;
+          transition: background 0.3s;
+        }
+        .link-btn:hover {
+          background: #5568d3;
         }
         .empty-tip {
-          text-align: center;
-          color: #fff;
-          font-size: 20px;
-          padding: 60px 0;
+          color: white;
+          font-size: 28px;
+          margin-top: 60px;
         }
+        /* 底部免责声明 */
         .footer-declare {
           margin-top: 60px;
-          padding: 25px 0;
+          padding: 30px 0;
           text-align: center;
           color: rgba(255,255,255,0.85);
           font-size: 14px;
           line-height: 1.8;
           border-top: 1px solid rgba(255,255,255,0.15);
         }
-      </style>
+      `}</style>
     </div>
-  )
+  );
 }
