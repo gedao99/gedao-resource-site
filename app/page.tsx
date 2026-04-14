@@ -214,7 +214,7 @@ export default function Home() {
           background: white;
           color: #333;
         }
-        /* 搜索+排序 */
+        /* 搜索+排序 */}
         .search-sort-bar {
           background: rgba(255,255,255,0.95);
           padding: 20px;
