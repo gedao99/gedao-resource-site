@@ -6,16 +6,47 @@ type Resource = {
   title: string;
   type: 'app' | 'ai' | 'side';
   time: string;
+  downloadUrl: string; // 新增下载链接
 };
 
 // 初始资源数据（你在这里加自己的资源！）
 const initialResources: Resource[] = [
-  { title: "抖音破解版无水印", type: "app", time: "2026-04-14" },
-  { title: "ChatGPT 4o 使用教程", type: "ai", time: "2026-04-13" },
-  { title: "小红书副业变现课", type: "side", time: "2026-04-12" },
-  { title: "PS 2025 永久激活版", type: "app", time: "2026-04-11" },
-  { title: "AI绘画 Midjourney 教程", type: "ai", time: "2026-04-10" },
-  { title: "闲鱼无货源赚钱课", type: "side", time: "2026-04-09" },
+  { 
+    title: "抖音破解版无水印", 
+    type: "app", 
+    time: "2026-04-14",
+    downloadUrl: "https://你的下载链接1" // 替换成你的下载链接
+  },
+  { 
+    title: "ChatGPT 4o 使用教程", 
+    type: "ai", 
+    time: "2026-04-13",
+    downloadUrl: "https://你的下载链接2"
+  },
+  { 
+    title: "小红书副业变现课", 
+    type: "side", 
+    time: "2026-04-12",
+    downloadUrl: "https://你的下载链接3"
+  },
+  { 
+    title: "PS 2025 永久激活版", 
+    type: "app", 
+    time: "2026-04-11",
+    downloadUrl: "https://你的下载链接4"
+  },
+  { 
+    title: "AI绘画 Midjourney 教程", 
+    type: "ai", 
+    time: "2026-04-10",
+    downloadUrl: "https://你的下载链接5"
+  },
+  { 
+    title: "闲鱼无货源赚钱课", 
+    type: "side", 
+    time: "2026-04-09",
+    downloadUrl: "https://你的下载链接6"
+  },
 ];
 
 export default function Home() {
@@ -86,6 +117,15 @@ export default function Home() {
               <h3>{item.title}</h3>
               <span className={`tag ${tagClass}`}>{tagText}</span>
               <div className="time">更新时间：{item.time}</div>
+              {/* 新增下载按钮 */}
+              <a 
+                href={item.downloadUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="download-btn"
+              >
+                📥 立即下载
+              </a>
             </div>
           );
         })}
@@ -95,8 +135,15 @@ export default function Home() {
 
   return (
     <div className="container">
-      {/* 管理后台按钮 */}
-      <a href="#" className="admin-btn">🔒 管理后台</a>
+      {/* 顶部横幅图片区域（可插入图片） */}
+      <div className="top-banner">
+        {/* 替换成你的图片链接 */}
+        <img 
+          src="https://你的横幅图片链接" 
+          alt="格道资源站横幅" 
+          className="banner-img"
+        />
+      </div>
 
       {/* 头部标题 */}
       <div className="site-header">
@@ -160,15 +207,22 @@ export default function Home() {
       {/* 资源列表 */}
       {renderResources()}
 
-      {/* 右下角微信群按钮（替换成你的群链接） */}
-      <a 
-        href="https://tfnc.beer/562898" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="wechat-float"
-      >
-        微信群
-      </a>
+      {/* 右侧悬浮微信群卡片（图片形式） */}
+      <div className="wechat-float-card">
+        <a 
+          href="https://你的微信群链接" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          {/* 替换成你的微信群二维码图片链接 */}
+          <img 
+            src="https://你的微信群二维码图片链接" 
+            alt="扫码加微信群" 
+            className="wechat-qrcode"
+          />
+          <p>扫码加群获取更多资源</p>
+        </a>
+      </div>
 
       {/* 全局样式 */}
       <style jsx global>{`
@@ -187,6 +241,19 @@ export default function Home() {
           max-width: 1200px;
           margin: 0 auto;
           text-align: center;
+        }
+        /* 顶部横幅样式 */
+        .top-banner {
+          width: 100%;
+          margin-bottom: 30px;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .banner-img {
+          width: 100%;
+          height: auto;
+          display: block;
         }
         /* 头部标题 */
         .site-header {
@@ -310,7 +377,24 @@ export default function Home() {
         .resource-item .time {
           font-size: 13px;
           color: #888;
-          margin-top: 12px;
+          margin: 12px 0;
+        }
+        /* 下载按钮样式 */
+        .download-btn {
+          display: block;
+          width: 100%;
+          padding: 10px;
+          background: #07c160;
+          color: white;
+          text-align: center;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: bold;
+          margin-top: 10px;
+          transition: background 0.3s;
+        }
+        .download-btn:hover {
+          background: #06ae56;
         }
         .empty-tip {
           color: white;
@@ -322,37 +406,33 @@ export default function Home() {
           margin-top: 10px;
           opacity: 0.9;
         }
-        /* 右下角微信群悬浮按钮 */
-        .wechat-float {
+        /* 右侧悬浮微信群卡片样式 */
+        .wechat-float-card {
           position: fixed;
           right: 30px;
-          bottom: 30px;
+          top: 50%;
+          transform: translateY(-50%);
           z-index: 9999;
-          width: 60px;
-          height: 60px;
-          background: #07c160;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-          text-decoration: none;
-          font-size: 14px;
+          background: white;
+          padding: 15px;
+          border-radius: 12px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+          width: 180px;
         }
-        /* 管理后台按钮 */
-        .admin-btn {
-          position: fixed;
-          right: 30px;
-          top: 30px;
-          padding: 12px 24px;
-          background: rgba(255,255,255,0.8);
-          border-radius: 30px;
+        .wechat-qrcode {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          margin-bottom: 10px;
+        }
+        .wechat-float-card p {
+          font-size: 14px;
           color: #333;
-          text-decoration: none;
+          text-align: center;
           font-weight: bold;
+        }
+        .wechat-float-card a {
+          text-decoration: none;
         }
       `}</style>
     </div>
