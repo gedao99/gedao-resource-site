@@ -182,7 +182,9 @@ export default function Home() {
           font-family: "Microsoft Yahei", Arial, sans-serif;
         }
         body {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          /* 背景图：你选的日落公路图，全屏覆盖、不拉伸、居中 */
+          background: url('https://img2.baidu.com/it/u=1752509292,1468373501&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500') no-repeat center center fixed;
+          background-size: cover;
           min-height: 100vh;
           padding: 30px 20px;
         }
@@ -208,6 +210,7 @@ export default function Home() {
         .site-header {
           color: white;
           margin-bottom: 40px;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
         .site-header h1 {
           font-size: 42px;
@@ -219,7 +222,7 @@ export default function Home() {
         }
         /* 搜索+排序 */
         .search-sort-bar {
-          background: rgba(255,255,255,0.95);
+          background: rgba(255,255,255,0.9);
           padding: 20px;
           border-radius: 16px;
           margin-bottom: 30px;
@@ -228,6 +231,7 @@ export default function Home() {
           gap: 15px;
           align-items: center;
           justify-content: center;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         .search-input {
           flex: 1;
@@ -263,17 +267,18 @@ export default function Home() {
           margin-top: 20px;
         }
         .column {
-          background: rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.85);
           border-radius: 16px;
           padding: 20px;
-          backdrop-filter: blur(10px);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         .column-title {
-          color: white;
+          color: #333;
           font-size: 20px;
           margin-bottom: 20px;
           padding-bottom: 10px;
-          border-bottom: 1px solid rgba(255,255,255,0.2);
+          border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .column-content {
           display: flex;
@@ -333,7 +338,7 @@ export default function Home() {
           background: #5568d3;
         }
         .empty-tip {
-          color: white;
+          color: #666;
           font-size: 16px;
           padding: 30px 0;
           opacity: 0.8;
@@ -343,12 +348,13 @@ export default function Home() {
           margin-top: 60px;
           padding: 30px 0;
           text-align: center;
-          color: rgba(255,255,255,0.85);
+          color: rgba(255,255,255,0.9);
           font-size: 14px;
           line-height: 1.8;
-          border-top: 1px solid rgba(255,255,255,0.15);
+          border-top: 1px solid rgba(255,255,255,0.3);
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        /* 响应式适配 */
+        /* 响应式适配：手机端自动变单列 */
         @media (max-width: 1024px) {
           .three-column-layout {
             grid-template-columns: 1fr;
