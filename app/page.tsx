@@ -1,83 +1,83 @@
 'use client';
 import { useState } from 'react';
 
-type Resource = {
-  title: string;
-  type: 'app' | 'ai' | 'side';
-  time: string;
-  linkUrl: string;
+type 资源 = {
+  标题: string;
+  类型: '应用程序' | '人工智能' | '边';
+  时间: string;
+  链接网址: string;
 };
 
-const initialResources: Resource[] = [
+const 初始资源: 资源[] = [
   {
-    title: "抖音破解版无水印",
-    type: "app",
-    time: "2026-04-14",
-    linkUrl: "https://你的网盘/链接"
-  },
-  {
-    title: "ChatGPT 4o 使用教程",
-    type: "ai",
-    time: "2026-04-13",
-    linkUrl: "https://你的教程/链接"
-  },
-  {
-    title: "小红书副业变现课",
-    type: "side",
-    time: "2026-04-12",
-    linkUrl: "https://你的课程/链接"
-  },
-   {
     标题: "2026AI私教实战课：从AI原理到全场景实操，零基础学会用AI提效+单人单干创业",
     类型: "人工智能",
     时间: "2026-04-15",
     链接网址: "https://pan.quark.cn/s/3dedc19b4aa6"
   },
   {
-    title: "PS 2025 永久激活版",
-    type: "app",
-    time: "2026-04-11",
-    linkUrl: "https://你的网盘/链接"
+    标题: "抖音破解版无水印",
+    类型: "应用程序",
+    时间: "2026-04-14",
+    链接网址: "https://你的网盘/链接"
   },
   {
-    title: "AI绘画 Midjourney 教程",
-    type: "ai",
-    time: "2026-04-10",
-    linkUrl: "https://你的教程/链接"
+    标题: "ChatGPT 4o 使用教程",
+    类型: "人工智能",
+    时间: "2026-04-13",
+    链接网址: "https://你的教程/链接"
   },
   {
-    title: "闲鱼无货源赚钱课",
-    type: "side",
-    time: "2026-04-09",
-    linkUrl: "https://你的课程/链接"
+    标题: "小红书副业变现课",
+    类型: "边",
+    时间: "2026-04-12",
+    链接网址: "https://你的课程/链接"
+  },
+  {
+    标题: "PS 2025 永久激活版",
+    类型: "应用程序",
+    时间: "2026-04-11",
+    链接网址: "https://你的网盘/链接"
+  },
+  {
+    标题: "AI绘画 Midjourney 教程",
+    类型: "人工智能",
+    时间: "2026-04-10",
+    链接网址: "https://你的教程/链接"
+  },
+  {
+    标题: "闲鱼无货源赚钱课",
+    类型: "边",
+    时间: "2026-04-09",
+    链接网址: "https://你的课程/链接"
   },
 ];
 
 export default function Home() {
-  const [currentCategory, setCurrentCategory] = useState<'all' | 'app' | 'ai' | 'side'>('all');
-  const [currentSort, setCurrentSort] = useState<'time' | 'name'>('time');
-  const [currentKeyword, setCurrentKeyword] = useState('');
+  const [当前分类, set当前分类] = useState<'all' | '应用程序' | '人工智能' | '边'>('all');
+  const [当前排序, set当前排序] = useState<'时间' | '名称'>('时间');
+  const [当前关键词, set当前关键词] = useState('');
 
-  const sortResources = (list: Resource[], sortType: 'time' | 'name') => {
-    if (sortType === 'time') {
-      return [...list].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+  const 排序资源 = (列表: 资源[], 排序方式: '时间' | '名称') => {
+    if (排序方式 === '时间') {
+      return [...列表].sort((a, b) => new Date(b.时间).getTime() - new Date(a.时间).getTime());
     } else {
-      return [...list].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+      return [...列表].sort((a, b) => a.标题.localeCompare(b.标题, 'zh-CN'));
     }
   };
 
-  const getList = () => {
-    let list = [...initialResources];
-    if (currentCategory !== "all") list = list.filter(item => item.type === currentCategory);
-    if (currentKeyword) list = list.filter(item => item.title.toLowerCase().includes(currentKeyword.toLowerCase()));
-    return sortResources(list, currentSort);
+  const 获取列表 = () => {
+    let 列表 = [...初始资源];
+    if (当前分类 !== "all") 列表 = 列表.filter(item => item.类型 === 当前分类);
+    if (当前关键词) 列表 = 列表.filter(item => item.标题.includes(当前关键词));
+    return 排序资源(列表, 当前排序);
   };
 
-  const list = getList();
+  const 列表 = 获取列表();
 
   return (
     <div className="container">
-      {/* 顶部横幅（不需要就删掉这段） */}
+      {/* 顶部横幅 */}
       <div className="top-banner">
         <img src="https://你的横幅图片链接" alt="格道资源站横幅" className="banner-img" />
       </div>
@@ -90,10 +90,10 @@ export default function Home() {
 
       {/* 分类导航 */}
       <div className="category-nav">
-        <button className={`category-btn ${currentCategory === 'all' ? 'active' : ''}`} onClick={() => setCurrentCategory('all')}>📋 全部资源</button>
-        <button className={`category-btn ${currentCategory === 'app' ? 'active' : ''}`} onClick={() => setCurrentCategory('app')}>📱 破解版APP资源</button>
-        <button className={`category-btn ${currentCategory === 'ai' ? 'active' : ''}`} onClick={() => setCurrentCategory('ai')}>🤖 AI学习教程</button>
-        <button className={`category-btn ${currentCategory === 'side' ? 'active' : ''}`} onClick={() => setCurrentCategory('side')}>💰 副业资源</button>
+        <button className={`category-btn ${当前分类 === 'all' ? 'active' : ''}`} onClick={() => set当前分类('all')}>📋 全部资源</button>
+        <button className={`category-btn ${当前分类 === '应用程序' ? 'active' : ''}`} onClick={() => set当前分类('应用程序')}>📱 破解版APP资源</button>
+        <button className={`category-btn ${当前分类 === '人工智能' ? 'active' : ''}`} onClick={() => set当前分类('人工智能')}>🤖 AI学习教程</button>
+        <button className={`category-btn ${当前分类 === '边' ? 'active' : ''}`} onClick={() => set当前分类('边')}>💰 副业资源</button>
       </div>
 
       {/* 搜索+排序 */}
@@ -102,45 +102,51 @@ export default function Home() {
           type="text"
           className="search-input"
           placeholder="🔍 输入资源名称搜索..."
-          value={currentKeyword}
-          onChange={(e) => setCurrentKeyword(e.target.value)}
+          value={当前关键词}
+          onInput={(e) => set当前关键词(e.target.value)}
         />
         <div className="sort-group">
-          <button className={`sort-btn ${currentSort === 'time' ? 'active' : ''}`} onClick={() => setCurrentSort('time')}>⏰ 按时间排序（最新置顶）</button>
-          <button className={`sort-btn ${currentSort === 'name' ? 'active' : ''}`} onClick={() => setCurrentSort('name')}>🔤 按名称排序</button>
+          <button className={`sort-btn ${当前排序 === '时间' ? 'active' : ''}`} onClick={() => set当前排序('时间')}>⏰ 按时间排序（最新置顶）</button>
+          <button className={`sort-btn ${当前排序 === '名称' ? 'active' : ''}`} onClick={() => set当前排序('名称')}>🔤 按名称排序</button>
         </div>
       </div>
 
-      {/* 资源列表 */}
+      {/* 资源列表（横排三行布局） */}
       <div className="resource-list">
-        {list.length === 0 ? (
+        {列表.length === 0 ? (
           <div className="empty-tip">📭 暂无资源</div>
         ) : (
-          list.map((item, idx) => {
-            const tagStyle = {
-              app: { bg: '#ff6b6b', text: '破解版APP' },
-              ai: { bg: '#4ecdc4', text: 'AI教程' },
-              side: { bg: '#45b7d1', text: '副业资源' }
-            }[item.type];
+          列表.map((item, idx) => {
+            const 标签样式 = {
+              '应用程序': { bg: '#ff6b6b', text: '破解版APP' },
+              '人工智能': { bg: '#4ecdc4', text: 'AI教程' },
+              '边': { bg: '#45b7d1', text: '副业资源' }
+            }[item.类型];
             return (
               <div key={idx} className="resource-item">
-                <h3>{item.title}</h3>
-                <span className="tag" style={{ backgroundColor: tagStyle.bg }}>{tagStyle.text}</span>
-                <div className="time">更新时间：{item.time}</div>
-                <a href={item.linkUrl} target="_blank" rel="noopener noreferrer" className="link-btn">🔗 点击跳转</a>
+                {/* 第一行：资源名称 */}
+                <div className="resource-title">{item.标题}</div>
+                {/* 第二行：类别 + 更新时间 */}
+                <div className="resource-meta">
+                  <span className="tag" style={{ backgroundColor: 标签样式.bg }}>{标签样式.text}</span>
+                  <span className="update-time">更新时间：{item.时间}</span>
+                </div>
+                {/* 第三行：获取资源链接按钮 */}
+                <a href={item.链接网址} target="_blank" rel="noopener noreferrer" className="link-btn">
+                  🔗 获取资源
+                </a>
               </div>
             );
           })
         )}
       </div>
 
-      {/* ✅ 底部免责声明（带你的邮箱） */}
+      {/* 底部免责声明 */}
       <div className="footer-declare">
         本站所有资源均来自网络收集，仅供学习与交流使用，严禁商用。<br/>
         若内容涉及侵权，请联系站长邮箱：jinc56@cbb21.cc，我方将第一时间处理删除。
       </div>
 
-      {/* 全局样式 */}
       <style jsx global>{`
         * {
           margin: 0;
@@ -246,42 +252,51 @@ export default function Home() {
           background: #667eea;
           color: white;
         }
-        /* 资源列表 */
+        /* 资源列表（横排三行布局核心样式） */
         .resource-list {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
           gap: 20px;
           margin-top: 20px;
         }
         .resource-item {
           background: white;
-          padding: 22px;
+          padding: 20px;
           border-radius: 14px;
           text-align: left;
           box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           transition: transform 0.2s;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
         .resource-item:hover {
           transform: translateY(-3px);
         }
-        .resource-item h3 {
+        /* 第一行：资源名称 */
+        .resource-title {
+          font-size: 18px;
+          font-weight: bold;
           color: #333;
-          font-size: 20px;
-          margin-bottom: 10px;
+          line-height: 1.4;
+        }
+        /* 第二行：类别 + 更新时间 */
+        .resource-meta {
+          display: flex;
+          align-items: center;
+          gap: 15px;
         }
         .tag {
-          display: inline-block;
-          padding: 4px 10px;
-          border-radius: 12px;
           font-size: 13px;
           color: white;
-          margin-right: 8px;
+          padding: 4px 10px;
+          border-radius: 12px;
         }
-        .time {
+        .update-time {
           font-size: 13px;
           color: #888;
-          margin: 12px 0;
         }
+        /* 第三行：获取资源按钮 */
         .link-btn {
           display: block;
           width: 100%;
@@ -292,7 +307,7 @@ export default function Home() {
           border-radius: 8px;
           text-decoration: none;
           font-weight: bold;
-          margin-top: 10px;
+          margin-top: 5px;
           transition: background 0.3s;
         }
         .link-btn:hover {
