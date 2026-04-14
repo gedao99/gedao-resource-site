@@ -54,7 +54,6 @@ const initialResources: Resource[] = [
 ];
 
 export default function Home() {
-  const [currentCategory, setCurrentCategory] = useState<'all' | 'app' | 'ai' | 'side'>('all');
   const [currentSort, setCurrentSort] = useState<'time' | 'name'>('time');
   const [currentKeyword, setCurrentKeyword] = useState('');
 
@@ -66,14 +65,41 @@ export default function Home() {
     }
   };
 
-  const getList = () => {
-    let list = [...initialResources];
-    if (currentCategory !== "all") list = list.filter(item => item.type === currentCategory);
-    if (currentKeyword) list = list.filter(item => item.title.includes(currentKeyword));
-    return sortResources(list, currentSort);
+  // 按分类筛选资源
+  const appResources = sortResources(initialResources.filter(item => item.type === 'app'), currentSort);
+  const aiResources = sortResources(initialResources.filter(item => item.type === 'ai'), currentSort);
+  const sideResources = sortResources(initialResources.filter(item => item.type === 'side'), currentSort);
+
+  // 全局搜索过滤
+  const filterByKeyword = (list: Resource[]) => {
+    if (!currentKeyword) return list;
+    return list.filter(item => item.title.toLowerCase().includes(currentKeyword.toLowerCase()));
   };
 
-  const list = getList();
+  const filteredApp = filterByKeyword(appResources);
+  const filteredAi = filterByKeyword(aiResources);
+  const filteredSide = filterByKeyword(sideResources);
+
+  // 渲染单个资源卡片
+  const renderResourceCard = (item: Resource) => {
+    const tagStyle = {
+      'app': { bg: '#ff6b6b', text: '破解版APP' },
+      'ai': { bg: '#4ecdc4', text: 'AI教程' },
+      'side': { bg: '#45b7d1', text: '副业资源' }
+    }[item.type];
+    return (
+      <div key={item.title} className="resource-item">
+        <div className="resource-title">{item.title}</div>
+        <div className="resource-meta">
+          <span className="tag" style={{ backgroundColor: tagStyle.bg }}>{tagStyle.text}</span>
+          <span className="update-time">更新时间：{item.time}</span>
+        </div>
+        <a href={item.linkUrl} target="_blank" rel="noopener noreferrer" className="link-btn">
+          🔗 获取资源
+        </a>
+      </div>
+    );
+  };
 
   return (
     <div className="container">
@@ -86,14 +112,6 @@ export default function Home() {
       <div className="site-header">
         <h1>🎯 格道资源站</h1>
         <p>分享破解版APP、AI教程、副业资源</p>
-      </div>
-
-      {/* 分类导航 */}
-      <div className="category-nav">
-        <button className={`category-btn ${currentCategory === 'all' ? 'active' : ''}`} onClick={() => setCurrentCategory('all')}>📋 全部资源</button>
-        <button className={`category-btn ${currentCategory === 'app' ? 'active' : ''}`} onClick={() => setCurrentCategory('app')}>📱 破解版APP资源</button>
-        <button className={`category-btn ${currentCategory === 'ai' ? 'active' : ''}`} onClick={() => setCurrentCategory('ai')}>🤖 AI学习教程</button>
-        <button className={`category-btn ${currentCategory === 'side' ? 'active' : ''}`} onClick={() => setCurrentCategory('side')}>💰 副业资源</button>
       </div>
 
       {/* 搜索+排序 */}
@@ -111,34 +129,43 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 资源列表（横排三行布局） */}
-      <div className="resource-list">
-        {list.length === 0 ? (
-          <div className="empty-tip">📭 暂无资源</div>
-        ) : (
-          list.map((item, idx) => {
-            const tagStyle = {
-              'app': { bg: '#ff6b6b', text: '破解版APP' },
-              'ai': { bg: '#4ecdc4', text: 'AI教程' },
-              'side': { bg: '#45b7d1', text: '副业资源' }
-            }[item.type];
-            return (
-              <div key={idx} className="resource-item">
-                {/* 第一行：资源名称 */}
-                <div className="resource-title">{item.title}</div>
-                {/* 第二行：类别 + 更新时间 */}
-                <div className="resource-meta">
-                  <span className="tag" style={{ backgroundColor: tagStyle.bg }}>{tagStyle.text}</span>
-                  <span className="update-time">更新时间：{item.time}</span>
-                </div>
-                {/* 第三行：获取资源链接按钮 */}
-                <a href={item.linkUrl} target="_blank" rel="noopener noreferrer" className="link-btn">
-                  🔗 获取资源
-                </a>
-              </div>
-            );
-          })
-        )}
+      {/* 三列固定布局核心 */}
+      <div className="three-column-layout">
+        {/* 第1列：破解版APP资源 */}
+        <div className="column">
+          <h2 className="column-title">📱 破解版APP资源</h2>
+          <div className="column-content">
+            {filteredApp.length === 0 ? (
+              <div className="empty-tip">暂无资源</div>
+            ) : (
+              filteredApp.map(renderResourceCard)
+            )}
+          </div>
+        </div>
+
+        {/* 第2列：AI教程资源 */}
+        <div className="column">
+          <h2 className="column-title">🤖 AI教程资源</h2>
+          <div className="column-content">
+            {filteredAi.length === 0 ? (
+              <div className="empty-tip">暂无资源</div>
+            ) : (
+              filteredAi.map(renderResourceCard)
+            )}
+          </div>
+        </div>
+
+        {/* 第3列：副业资源 */}
+        <div className="column">
+          <h2 className="column-title">💰 副业资源</h2>
+          <div className="column-content">
+            {filteredSide.length === 0 ? (
+              <div className="empty-tip">暂无资源</div>
+            ) : (
+              filteredSide.map(renderResourceCard)
+            )}
+          </div>
+        </div>
       </div>
 
       {/* 底部免责声明 */}
@@ -160,7 +187,7 @@ export default function Home() {
           padding: 30px 20px;
         }
         .container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
           text-align: center;
         }
@@ -189,30 +216,6 @@ export default function Home() {
         .site-header p {
           font-size: 22px;
           opacity: 0.95;
-        }
-        /* 分类导航 */
-        .category-nav {
-          display: flex;
-          justify-content: center;
-          gap: 15px;
-          flex-wrap: wrap;
-          margin-bottom: 25px;
-        }
-        .category-btn {
-          padding: 14px 30px;
-          border: none;
-          border-radius: 30px;
-          font-size: 18px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        .category-btn.active {
-          background: #333;
-          color: white;
-        }
-        .category-btn:not(.active) {
-          background: white;
-          color: #333;
         }
         /* 搜索+排序 */
         .search-sort-bar {
@@ -252,13 +255,32 @@ export default function Home() {
           background: #667eea;
           color: white;
         }
-        /* 资源列表（横排三行布局核心样式） */
-        .resource-list {
+        /* 三列布局核心样式 */
+        .three-column-layout {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-          gap: 20px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 25px;
           margin-top: 20px;
         }
+        .column {
+          background: rgba(255,255,255,0.1);
+          border-radius: 16px;
+          padding: 20px;
+          backdrop-filter: blur(10px);
+        }
+        .column-title {
+          color: white;
+          font-size: 20px;
+          margin-bottom: 20px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .column-content {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        /* 资源卡片样式 */
         .resource-item {
           background: white;
           padding: 20px;
@@ -273,14 +295,12 @@ export default function Home() {
         .resource-item:hover {
           transform: translateY(-3px);
         }
-        /* 第一行：资源名称 */
         .resource-title {
           font-size: 18px;
           font-weight: bold;
           color: #333;
           line-height: 1.4;
         }
-        /* 第二行：类别 + 更新时间 */
         .resource-meta {
           display: flex;
           align-items: center;
@@ -296,7 +316,6 @@ export default function Home() {
           font-size: 13px;
           color: #888;
         }
-        /* 第三行：获取资源按钮 */
         .link-btn {
           display: block;
           width: 100%;
@@ -315,8 +334,9 @@ export default function Home() {
         }
         .empty-tip {
           color: white;
-          font-size: 28px;
-          margin-top: 60px;
+          font-size: 16px;
+          padding: 30px 0;
+          opacity: 0.8;
         }
         /* 底部免责声明 */
         .footer-declare {
@@ -327,6 +347,12 @@ export default function Home() {
           font-size: 14px;
           line-height: 1.8;
           border-top: 1px solid rgba(255,255,255,0.15);
+        }
+        /* 响应式适配 */
+        @media (max-width: 1024px) {
+          .three-column-layout {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
     </div>
