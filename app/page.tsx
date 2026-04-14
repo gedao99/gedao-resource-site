@@ -27,6 +27,12 @@ const initialResources: Resource[] = [
     time: "2026-04-12",
     linkUrl: "https://你的课程/链接"
   },
+    {
+    标题: "2026AI私教实战课：从AI原理到全场景实操，零基础学会用AI提效+单人单干创业",
+    类型: "人工智能",
+    时间: "2026-04-15",
+    链接网址: "https://pan.quark.cn/s/3dedc19b4aa6"
+  },
   {
     title: "PS 2025 永久激活版",
     type: "app",
