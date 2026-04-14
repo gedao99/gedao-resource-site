@@ -134,7 +134,7 @@ export default function Home() {
       <style jsx global>{`
         *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
         html,body{
-          background:url('https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/c5a5081950564a899d39594fedaa9951.png~tplv-a9rns2rl98-image.png') !important;
+          background:url('https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_gen_image/cd457466542c42bab2095994e3f29e02.jpeg~tplv-a9rns2rl98-image_dld_watermark_1_6b.png?lk3s=8e244e95&rcl=20260415045342E70F294401205B79CB5A&rrcfp=e875b5a5&x-expires=2091560024&x-signature=W1W6iw%2Balw6D%2F1rhf306nPtxvC0%3D') !important;
           background-size:cover !important;
           background-position:center !important;
           background-attachment:fixed !important;
