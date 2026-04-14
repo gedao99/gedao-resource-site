@@ -1,65 +1,58 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
-
-type Resource = {
-  title: string;
-  type: 'app' | 'ai' | 'side';
-  time: string;
-  linkUrl: string;
-  desc: string;
-};
-
-const initialResources: Resource[] = [
-  {
-    title: "2026AI私教实战课：从AI原理到全场景实操",
-    type: "ai",
-    time: "2026-04-15",
-    linkUrl: "https://pan.quark.cn/s/3dedc19b4aa6",
-    desc: "零基础学会AI提效、单人创业、全流程教程。"
-  },
-  {
-    title: "抖音破解版无水印",
-    type: "app",
-    time: "2026-04-14",
-    linkUrl: "https://你的链接",
-    desc: "无水印下载、去广告、高清解析。"
-  },
-  {
-    title: "ChatGPT 4o 使用教程",
-    type: "ai",
-    time: "2026-04-13",
-    linkUrl: "https://你的链接",
-    desc: "最新4o模型使用技巧、提示词模板。"
-  },
-  {
-    title: "小红书副业变现课",
-    type: "side",
-    time: "2026-04-12",
-    linkUrl: "https://你的链接",
-    desc: "0粉起号、选品、文案、变现全流程。"
-  },
-  {
-    title: "PS 2025 永久激活版",
-    type: "app",
-    time: "2026-04-11",
-    linkUrl: "https://你的链接",
-    desc: "完整插件、无广告、永久使用。"
-  },
-  {
-    title: "闲鱼无货源赚钱课",
-    type: "side",
-    time: "2026-04-09",
-    linkUrl: "https://你的链接",
-    desc: "不用囤货，一部手机就能做。"
-  },
-];
 
 export default function Home() {
-  const [currentSort, setCurrentSort] = useState<'time' | 'name'>('time');
+  const [currentSort, setCurrentSort] = useState('time');
   const [currentKeyword, setCurrentKeyword] = useState('');
 
-  const sortResources = (list: Resource[], sortType: 'time' | 'name') => {
+  // 你的资源数据（纯对象，无类型，绝对不报错）
+  const initialResources = [
+    {
+      title: "2026AI私教实战课：从AI原理到全场景实操",
+      type: "ai",
+      time: "2026-04-15",
+      linkUrl: "https://pan.quark.cn/s/3dedc19b4aa6",
+      desc: "零基础学会AI提效、单人创业、全流程教程。"
+    },
+    {
+      title: "抖音破解版无水印",
+      type: "app",
+      time: "2026-04-14",
+      linkUrl: "https://你的链接",
+      desc: "无水印下载、去广告、高清解析。"
+    },
+    {
+      title: "ChatGPT 4o 使用教程",
+      type: "ai",
+      time: "2026-04-13",
+      linkUrl: "https://你的链接",
+      desc: "最新4o模型使用技巧、提示词模板。"
+    },
+    {
+      title: "小红书副业变现课",
+      type: "side",
+      time: "2026-04-12",
+      linkUrl: "https://你的链接",
+      desc: "0粉起号、选品、文案、变现全流程。"
+    },
+    {
+      title: "PS 2025 永久激活版",
+      type: "app",
+      time: "2026-04-11",
+      linkUrl: "https://你的链接",
+      desc: "完整插件、无广告、永久使用。"
+    },
+    {
+      title: "闲鱼无货源赚钱课",
+      type: "side",
+      time: "2026-04-09",
+      linkUrl: "https://你的链接",
+      desc: "不用囤货，一部手机就能做。"
+    },
+  ];
+
+  // 排序函数（纯JS，无类型）
+  const sortResources = (list, sortType) => {
     if (sortType === 'time') {
       return [...list].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
     } else {
@@ -67,15 +60,18 @@ export default function Home() {
     }
   };
 
+  // 分类筛选
   const appList = initialResources.filter(item => item.type === 'app');
   const aiList = initialResources.filter(item => item.type === 'ai');
   const sideList = initialResources.filter(item => item.type === 'side');
 
+  // 排序后的数据
   const appResources = sortResources(appList, currentSort);
   const aiResources = sortResources(aiList, currentSort);
   const sideResources = sortResources(sideList, currentSort);
 
-  const searchList = (list: Resource[]) => {
+  // 搜索过滤
+  const searchList = (list) => {
     if (!currentKeyword) return list;
     return list.filter(item => item.title.includes(currentKeyword));
   };
@@ -84,8 +80,9 @@ export default function Home() {
   const finalAi = searchList(aiResources);
   const finalSide = searchList(sideResources);
 
-  const renderItem = (item: Resource) => (
-    <Link href={`/detail?title=${encodeURIComponent(item.title)}`} key={item.title} className="card">
+  // 渲染资源卡片（用a标签代替Link，绝对不报错）
+  const renderItem = (item) => (
+    <a href={`/detail?title=${encodeURIComponent(item.title)}`} key={item.title} className="card">
       <div className="card-title">{item.title}</div>
       <div className="card-info">
         <span className={`tag tag-${item.type}`}>
@@ -94,7 +91,7 @@ export default function Home() {
         <span>{item.time}</span>
       </div>
       <div className="card-btn">查看详情</div>
-    </Link>
+    </a>
   );
 
   return (
@@ -111,6 +108,11 @@ export default function Home() {
             onChange={e => setCurrentKeyword(e.target.value)}
             placeholder="🔍 搜索资源..."
           />
+        </div>
+
+        <div className="sort">
+          <button onClick={() => setCurrentSort('time')} className={currentSort === 'time' ? 'on' : ''}>最新</button>
+          <button onClick={() => setCurrentSort('name')} className={currentSort === 'name' ? 'on' : ''}>名称</button>
         </div>
 
         <div className="columns">
@@ -162,6 +164,10 @@ export default function Home() {
           border-radius:30px;border:none;outline:none;
           background:rgba(255,255,255,0.95);
         }
+
+        .sort{display:flex;justify-content:center;gap:10px;margin-bottom:25px}
+        .sort button{padding:10px 18px;border-radius:20px;border:none;background:rgba(255,255,255,0.9);cursor:pointer}
+        .sort button.on{background:#4f46e5;color:#fff}
 
         /* 三栏 —— 纯白色 */
         .columns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
