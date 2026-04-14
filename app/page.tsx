@@ -89,11 +89,11 @@ export default function Home() {
       <div className="card-title">{item.title}</div>
       <div className="card-info">
         <span className={`tag tag-${item.type}`}>
-          {item.type === 'app' ? '破解APP' : item.type === 'ai' ? 'AI教程' : '副业资源'}
+          {item.type === 'app' ? '🤖 破解APP' : item.type === 'ai' ? '🧠 AI教程' : '💻 副业资源'}
         </span>
         <span>{item.time}</span>
       </div>
-      <div className="card-btn">查看详情</div>
+      <div className="card-btn">🚀 查看详情</div>
     </Link>
   );
 
@@ -101,41 +101,41 @@ export default function Home() {
     <div className="all">
       <div className="container">
         <div className="title">
-          <h1>🎯 格道资源站</h1>
-          <p>分享破解APP、AI教程、副业资源</p>
+          <h1>🤖 格道AI资源站</h1>
+          <p>AI工具 | 破解APP | 副业教程</p>
         </div>
 
         <div className="search">
           <input
             value={currentKeyword}
             onChange={e => setCurrentKeyword(e.target.value)}
-            placeholder="🔍 搜索资源..."
+            placeholder="🔍 搜索AI资源..."
           />
         </div>
 
         <div className="sort">
-          <button onClick={() => setCurrentSort('time')} className={currentSort === 'time' ? 'on' : ''}>最新</button>
-          <button onClick={() => setCurrentSort('name')} className={currentSort === 'name' ? 'on' : ''}>名称</button>
+          <button onClick={() => setCurrentSort('time')} className={currentSort === 'time' ? 'on' : ''}>✨ 最新</button>
+          <button onClick={() => setCurrentSort('name')} className={currentSort === 'name' ? 'on' : ''}>📋 名称</button>
         </div>
 
         <div className="columns">
           <div className="col">
             <Link href="/category?type=app" className="col-title">
-              📱 破解版APP（点我查看全部）
+              🤖 破解版APP（点我查看全部）
             </Link>
             <div className="list">{finalApp.map(renderItem)}</div>
           </div>
 
           <div className="col">
             <Link href="/category?type=ai" className="col-title">
-              🤖 AI教程（点我查看全部）
+              🧠 AI教程资源（点我查看全部）
             </Link>
             <div className="list">{finalAi.map(renderItem)}</div>
           </div>
 
           <div className="col">
             <Link href="/category?type=side" className="col-title">
-              💰 副业资源（点我查看全部）
+              💻 副业资源（点我查看全部）
             </Link>
             <div className="list">{finalSide.map(renderItem)}</div>
           </div>
@@ -145,7 +145,8 @@ export default function Home() {
       <style jsx global>{`
         *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
         html,body{
-          background:url("https://img2.baidu.com/it/u=1752509292,1468373501&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500") !important;
+          background:url("https://picsum.photos/id/1039/1920/1080") !important;
+          background-image: url('https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_gen_image/cd457466542c42bab2095994e3f29e02.jpeg~tplv-a9rns2rl98-image_dld_watermark_1_6b.png?lk3s=8e244e95&rcl=20260415045342E70F294401205B79CB5A&rrcfp=e875b5a5&x-expires=2091560024&x-signature=W1W6iw%2Balw6D%2F1rhf306nPtxvC0%3D') !important;
           background-size:cover !important;
           background-position:center !important;
           background-attachment:fixed !important;
@@ -154,23 +155,25 @@ export default function Home() {
         }
         .all{padding:30px 15px}
         .container{max-width:1200px;margin:0 auto}
-        .title{text-align:center;color:#fff;margin-bottom:30px;text-shadow:0 2px 5px #000}
+        .title{text-align:center;color:#fff;margin-bottom:30px;text-shadow:0 0 15px rgba(100,150,255,0.8)}
+        .title h1{font-size:36px;margin-bottom:8px}
+        .title p{font-size:20px;opacity:0.9}
         .search{text-align:center;margin-bottom:15px}
-        .search input{width:90%;max-width:500px;padding:12px 16px;border-radius:30px;border:none;outline:none}
+        .search input{width:90%;max-width:500px;padding:14px 20px;border-radius:30px;border:none;outline:none;background:rgba(255,255,255,0.9);backdrop-filter:blur(8px)}
         .sort{display:flex;justify-content:center;gap:10px;margin-bottom:25px}
-        .sort button{padding:8px 14px;border-radius:20px;border:none;background:#fff}
-        .sort button.on{background:#0071e3;color:#fff}
+        .sort button{padding:10px 18px;border-radius:20px;border:none;background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);cursor:pointer;font-weight:bold}
+        .sort button.on{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 0 10px rgba(99,102,241,0.6)}
         .columns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
-        .col{background:rgba(255,255,255,0.9);border-radius:16px;padding:20px}
-        .col-title{display:block;text-align:center;font-weight:bold;margin-bottom:15px;color:#0071e3;text-decoration:none}
-        .card{background:#fff;border-radius:12px;padding:15px;margin-bottom:10px;display:block;text-decoration:none;color:#333;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-        .card-title{font-weight:bold;margin-bottom:8px}
-        .card-info{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:10px}
-        .tag{padding:3px 8px;border-radius:10px;color:#fff}
-        .tag-app{background:#ff6b6b}
-        .tag-ai{background:#4ecdc4}
-        .tag-side{background:#45b7d1}
-        .card-btn{background:#0071e3;color:#fff;text-align:center;padding:6px;border-radius:8px;font-size:12px}
+        .col{background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+        .col-title{display:block;text-align:center;font-weight:bold;margin-bottom:15px;color:#fff;text-decoration:none;font-size:18px;text-shadow:0 0 10px rgba(100,150,255,0.8)}
+        .card{background:rgba(255,255,255,0.9);border-radius:12px;padding:18px;margin-bottom:12px;display:block;text-decoration:none;color:#333;box-shadow:0 4px 15px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.3)}
+        .card-title{font-weight:bold;margin-bottom:10px;font-size:16px}
+        .card-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:#666}
+        .tag{padding:4px 10px;border-radius:12px;color:#fff;font-weight:bold;box-shadow:0 0 8px rgba(0,0,0,0.2)}
+        .tag-app{background:linear-gradient(135deg,#ff6b6b,#f43f5e)}
+        .tag-ai{background:linear-gradient(135deg,#4ecdc4,#06b6d4)}
+        .tag-side{background:linear-gradient(135deg,#45b7d1,#3b82f6)}
+        .card-btn{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:bold;box-shadow:0 0 10px rgba(99,102,241,0.5)}
         @media(max-width:900px){.columns{grid-template-columns:1fr}}
       `}</style>
     </div>
