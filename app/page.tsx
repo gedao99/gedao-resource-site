@@ -181,20 +181,20 @@ export default function Home() {
           box-sizing: border-box;
           font-family: "Microsoft Yahei", Arial, sans-serif;
         }
-        body {
-          /* 核心修复：强制背景图生效，全屏覆盖、不拉伸、居中固定 */
+        html, body {
+          /* 核心修复：强制背景图100%生效，全屏覆盖、不拉伸、居中固定 */
           background-image: url('https://img2.baidu.com/it/u=1752509292,1468373501&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500') !important;
           background-repeat: no-repeat !important;
           background-position: center center !important;
           background-attachment: fixed !important;
           background-size: cover !important;
           min-height: 100vh;
-          padding: 30px 20px;
         }
         .container {
           max-width: 1400px;
           margin: 0 auto;
           text-align: center;
+          padding: 30px 20px;
         }
         /* 顶部横幅 */
         .top-banner {
