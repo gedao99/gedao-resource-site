@@ -1,227 +1,264 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 export default function Home() {
+  const [currentSort, setCurrentSort] = useState('time');
   const [currentKeyword, setCurrentKeyword] = useState('');
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
 
-  // ====================== 资源列表（可置顶）======================
   const initialResources = [
-    // ============== 置顶资源 ==============
-    {
-      title: "【置顶】爱影视(爱电影) 永久可用",
-      type: "app",
-      time: "2026-04-15",
-      linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
-      desc: "已优化最新版本，无广告",
-      top: true, // ✅ 加这个就是置顶
-    },
-    // ============== 普通资源 ==============
     {
       title: "2026AI私教实战课：从AI原理到全场景实操",
       type: "ai",
       time: "2026-04-15",
       linkUrl: "https://pan.quark.cn/s/3dedc19b4aa6",
-      desc: "零基础学会AI提效、单人创业、全流程教程。",
-      top: false,
+      desc: "零基础学会AI提效、单人创业、全流程教程。"
     },
     {
       title: "抖音破解版无水印",
       type: "app",
       time: "2026-04-14",
       linkUrl: "https://你的链接",
-      desc: "无水印下载、去广告、高清解析。",
-      top: false,
+      desc: "无水印下载、去广告、高清解析。"
     },
     {
       title: "ChatGPT 4o 使用教程",
       type: "ai",
       time: "2026-04-13",
       linkUrl: "https://你的链接",
-      desc: "最新4o模型使用技巧、提示词模板。",
-      top: false,
-    }
-    // 👇 你要加的新资源，就按上面的格式，放在这里！
-    // 注意：最后一个资源后面，绝对不能加逗号！
+      desc: "最新4o模型使用技巧、提示词模板。"
+    },
+    {
+      title: "小红书副业变现课",
+      type: "side",
+      time: "2026-04-12",
+      linkUrl: "https://你的链接",
+      desc: "0粉起号、选品、文案、变现全流程。"
+    },
+    {
+      title: "PS 2025 永久激活版",
+      type: "app",
+      time: "2026-04-11",
+      linkUrl: "https://你的链接",
+      desc: "完整插件、无广告、永久使用。"
+    },
+    {
+      title: "闲鱼无货源赚钱课",
+      type: "side",
+      time: "2026-04-09",
+      linkUrl: "https://你的链接",
+      desc: "不用囤货，一部手机就能做。"
+    },
   ];
 
-  // ====================== 搜索过滤逻辑 ======================
-  const resources = useMemo(() => {
-    if (!currentKeyword) return initialResources;
-    const keyword = currentKeyword.toLowerCase();
-    return initialResources.filter(item => 
-      item.title.toLowerCase().includes(keyword) || 
-      item.desc.toLowerCase().includes(keyword)
-    );
-  }, [currentKeyword]);
+  const sortResources = (list: any[], sortType: string) => {
+    if (sortType === 'time') {
+      return [...list].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+    } else {
+      return [...list].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+    }
+  };
 
-  // ====================== 分类统计 ======================
-  const categoryCount = useMemo(() => {
-    const count: Record<string, number> = {};
-    initialResources.forEach(item => {
-      count[item.type] = (count[item.type] || 0) + 1;
-    });
-    return count;
-  }, []);
+  const appList = initialResources.filter(item => item.type === 'app');
+  const aiList = initialResources.filter(item => item.type === 'ai');
+  const sideList = initialResources.filter(item => item.type === 'side');
 
-  // ====================== 页面渲染 ======================
+  const appResources = sortResources(appList, currentSort);
+  const aiResources = sortResources(aiList, currentSort);
+  const sideResources = sortResources(sideList, currentSort);
+
+  const searchList = (list: any[]) => {
+    if (!currentKeyword) return list;
+    return list.filter(item => item.title.includes(currentKeyword));
+  };
+
+  const finalApp = searchList(appResources);
+  const finalAi = searchList(aiResources);
+  const finalSide = searchList(sideResources);
+
+  const typeMap = {
+    app: "📱 软件工具",
+    ai: "🤖 AI教程",
+    side: "💰 副业项目"
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* 头部 */}
-        <header className="text-center mb-8 md:mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            格道黑科技资源站
-          </h1>
-          <p className="text-gray-300 text-lg md:text-xl">
-            每日更新优质软件、教程、工具，关注公众号【格道黑科技】获取更多
-          </p>
-        </header>
-
-        {/* 搜索框 */}
-        <div className="mb-8">
-          <div className="max-w-2xl mx-auto relative">
-            <input
-              type="text"
-              placeholder="🔍 搜索资源（输入软件名/关键词）..."
-              value={currentKeyword}
-              onChange={(e) => setCurrentKeyword(e.target.value)}
-              className="w-full px-6 py-4 rounded-2xl bg-gray-800/80 backdrop-blur border border-gray-700 text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
-            {currentKeyword && (
-              <button
-                onClick={() => setCurrentKeyword('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
-            )}
-          </div>
+    <div className="all">
+      <div className="container">
+        <div className="title">
+          <h1>格道资源站</h1>
+          <p>精品软件 | AI教程 | 副业项目</p>
         </div>
 
-        {/* 分类统计 */}
-        <div className="flex flex-wrap gap-4 justify-center mb-8">
-          {Object.entries(categoryCount).map(([type, count]) => (
-            <div
-              key={type}
-              className="px-6 py-3 rounded-xl bg-gray-800/60 backdrop-blur border border-gray-700 text-white"
-            >
-              <span className="font-bold text-blue-400">{type}</span>
-              <span className="ml-2 text-gray-300">({count})</span>
-            </div>
-          ))}
+        <div className="search">
+          <input
+            value={currentKeyword}
+            onChange={e => setCurrentKeyword(e.target.value)}
+            placeholder="🔍 搜索资源..."
+          />
         </div>
 
-        {/* 资源列表 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {resources.map((item, index) => (
-            <div
-              key={index}
-              onClick={() => setSelectedItem(item)}
-              className={`rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl border ${
-                item.top 
-                  ? 'bg-gradient-to-r from-yellow-900/80 to-orange-900/80 border-yellow-500/50' 
-                  : 'bg-gray-800/60 backdrop-blur border-gray-700'
-              }`}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  {item.top && (
-                    <span className="px-2 py-1 bg-yellow-500 text-xs font-bold rounded text-black">
-                      置顶
-                    </span>
-                  )}
-                  <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full">
-                    {item.type}
-                  </span>
-                </div>
-                <span className="text-xs text-gray-400">{item.time}</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
-                {item.title}
-              </h3>
-              <p className="text-gray-300 text-sm line-clamp-2 mb-4">
-                {item.desc}
-              </p>
-              <div className="flex items-center gap-2 text-blue-400 text-sm font-medium">
-                <span>点击查看详情</span>
-                <span>→</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 空状态 */}
-        {resources.length === 0 && (
-          <div className="text-center py-20">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold text-white mb-2">未找到相关资源</h3>
-            <p className="text-gray-400">试试其他关键词吧~</p>
-          </div>
-        )}
-
-        {/* 详情弹窗 */}
-        {selectedItem && (
-          <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedItem(null)}
-          >
-            <div 
-              className="bg-gray-800 rounded-2xl p-6 md:p-8 max-w-2xl w-full border border-gray-700"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    {selectedItem.top && (
-                      <span className="px-2 py-1 bg-yellow-500 text-xs font-bold rounded text-black">
-                        置顶
-                      </span>
-                    )}
-                    <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full">
-                      {selectedItem.type}
-                    </span>
+        <div className="columns">
+          <div className="col">
+            <h2 className="col-title">📱 破解软件</h2>
+            <div className="list">
+              {finalApp.map((item, index) => (
+                <div key={index} className="card" onClick={() => setSelectedItem(item)}>
+                  <div className="card-title">{item.title}</div>
+                  <div className="card-info">
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span>{item.time}</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-white">{selectedItem.title}</h2>
+                  <div className="card-btn">查看详情</div>
                 </div>
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  className="text-gray-400 hover:text-white text-2xl"
-                >
-                  ✕
-                </button>
-              </div>
-              
-              <div className="space-y-4 mb-6">
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">更新时间</p>
-                  <p className="text-white">{selectedItem.time}</p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">资源描述</p>
-                  <p className="text-white whitespace-pre-line">{selectedItem.desc}</p>
-                </div>
-              </div>
-
-              <a
-                href={selectedItem.linkUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block text-center px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-white font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all"
-              >
-                🚀 立即获取（夸克网盘）
-              </a>
+              ))}
             </div>
           </div>
-        )}
 
-        {/* 底部 */}
-        <footer className="text-center mt-12 text-gray-400 text-sm">
-          <p>© 2026 格道黑科技 | 关注公众号【格道黑科技】获取每日更新</p>
-          <p className="mt-2">本网站仅做资源分享，请勿用于商业用途</p>
-        </footer>
+          <div className="col">
+            <h2 className="col-title">🤖 AI教程</h2>
+            <div className="list">
+              {finalAi.map((item, index) => (
+                <div key={index} className="card" onClick={() => setSelectedItem(item)}>
+                  <div className="card-title">{item.title}</div>
+                  <div className="card-info">
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span>{item.time}</span>
+                  </div>
+                  <div className="card-btn">查看详情</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="col">
+            <h2 className="col-title">💰 副业项目</h2>
+            <div className="list">
+              {finalSide.map((item, index) => (
+                <div key={index} className="card" onClick={() => setSelectedItem(item)}>
+                  <div className="card-title">{item.title}</div>
+                  <div className="card-info">
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span>{item.time}</span>
+                  </div>
+                  <div className="card-btn">查看详情</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* 详情弹窗 */}
+      {selectedItem && (
+        <div className="modal" onClick={() => setSelectedItem(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setSelectedItem(null)}>&times;</span>
+            <h1 className="modal-title">{selectedItem.title}</h1>
+            <div className="modal-info">
+              <span>{typeMap[selectedItem.type as keyof typeof typeMap]}</span>
+              <span>更新时间：{selectedItem.time}</span>
+            </div>
+            <div className="modal-desc">{selectedItem.desc}</div>
+            <a href={selectedItem.linkUrl} className="modal-btn" target="_blank" rel="noopener noreferrer">🔗 立即转存 / 下载</a>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
+        html,body{
+          background:url('https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_gen_image/cd457466542c42bab2095994e3f29e02.jpeg~tplv-a9rns2rl98-image_dld_watermark_1_6b.png?lk3s=8e244e95&rcl=20260415045342E70F294401205B79CB5A&rrcfp=e875b5a5&x-expires=2091560024&x-signature=W1W6iw%2Balw6D%2F1rhf306nPtxvC0%3D') !important;
+          background-size:cover !important;
+          background-position:center !important;
+          background-attachment:fixed !important;
+          background-repeat:no-repeat !important;
+          min-height:100vh;
+        }
+        .all{padding:30px 15px}
+        .container{max-width:1200px;margin:0 auto}
+        
+        .title{text-align:center;margin-bottom:30px}
+        .title h1{
+          font-size:38px;
+          font-weight:bold;
+          background:linear-gradient(90deg,#4f46e5,#7c3aed,#8b5cf6);
+          -webkit-background-clip:text;
+          -webkit-text-fill-color:transparent;
+          margin-bottom:8px;
+        }
+        .title p{font-size:18px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.5)}
+        
+        .search{text-align:center;margin-bottom:25px}
+        .search input{
+          width:90%;max-width:500px;padding:14px 20px;
+          border-radius:30px;border:none;outline:none;
+          background:rgba(255,255,255,0.95);
+        }
+
+        .columns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+        .col{
+          background:#ffffff !important;
+          border-radius:16px;padding:22px;
+          box-shadow:0 4px 15px rgba(0,0,0,0.1);
+        }
+        .col-title{
+          text-align:center;font-size:18px;font-weight:bold;
+          margin-bottom:18px;color:#222;
+        }
+
+        .card{
+          background:#f9fafb;
+          border-radius:12px;padding:16px;
+          margin-bottom:10px;cursor:pointer;
+        }
+        .card-title{font-weight:bold;margin-bottom:8px}
+        .card-info{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#666;margin-bottom:10px}
+        
+        .tag{padding:4px 10px;border-radius:8px;color:#fff;font-size:12px;font-weight:bold}
+        .tag-app{background:#3b82f6}
+        .tag-ai{background:#8b5cf6}
+        .tag-side{background:#10b981}
+        
+        .card-btn{
+          background:#4f46e5;color:#fff;
+          text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:bold;
+        }
+
+        /* 弹窗样式 */
+        .modal{
+          position:fixed;top:0;left:0;width:100%;height:100%;
+          background:rgba(0,0,0,0.7);z-index:999;
+          display:flex;justify-content:center;align-items:center;
+        }
+        .modal-content{
+          background:#fff;border-radius:20px;padding:30px;
+          max-width:700px;width:90%;position:relative;
+        }
+        .close-btn{
+          position:absolute;top:15px;right:15px;font-size:24px;
+          cursor:pointer;color:#666;
+        }
+        .modal-title{
+          font-size:28px;font-weight:bold;
+          background:linear-gradient(90deg,#4f46e5,#7c3aed,#8b5cf6);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+          margin-bottom:15px;
+        }
+        .modal-info{
+          display:flex;gap:15px;margin-bottom:20px;color:#666;font-size:14px
+        }
+        .modal-desc{
+          line-height:1.7;color:#333;margin-bottom:25px
+        }
+        .modal-btn{
+          display:block;background:linear-gradient(135deg,#4f46e5,#7c3aed);
+          color:#fff;text-align:center;padding:15px;border-radius:12px;
+          text-decoration:none;font-weight:bold;font-size:16px;
+        }
+
+        @media(max-width:900px){.columns{grid-template-columns:1fr}}
+      `}</style>
     </div>
   );
 }
