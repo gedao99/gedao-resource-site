@@ -15,6 +15,13 @@ export default function Home() {
       desc: "零基础学会AI提效、单人创业、全流程教程。"
     },
     {
+  title: "爱影视(爱电影)",
+  type: "app",
+  time: "2026-04-15",
+  linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
+  desc: "已优化最新版本",
+},
+    {
       title: "抖音破解版无水印",
       type: "app",
       time: "2026-04-14",
