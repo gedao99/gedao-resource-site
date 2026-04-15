@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [currentSort, setCurrentSort] = useState('time');
@@ -15,12 +16,12 @@ export default function Home() {
       desc: "零基础学会AI提效、单人创业、全流程教程。"
     },
     {
-  title: "爱影视(爱电影)",
-  type: "app",
-  time: "2026-04-15",
-  linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
-  desc: "已优化最新版本",
-},
+      title: "爱影视(爱电影)",
+      type: "app",
+      time: "2026-04-15",
+      linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
+      desc: "已优化最新版本"
+    },
     {
       title: "抖音破解版无水印",
       type: "app",
@@ -70,9 +71,10 @@ export default function Home() {
   const aiList = initialResources.filter(item => item.type === 'ai');
   const sideList = initialResources.filter(item => item.type === 'side');
 
-  const appResources = sortResources(appList, currentSort);
-  const aiResources = sortResources(aiList, currentSort);
-  const sideResources = sortResources(sideList, currentSort);
+  // 首页只展示最新的3个，剩下的去分类页看
+  const appResources = sortResources(appList, currentSort).slice(0, 3);
+  const aiResources = sortResources(aiList, currentSort).slice(0, 3);
+  const sideResources = sortResources(sideList, currentSort).slice(0, 3);
 
   const searchList = (list: any[]) => {
     if (!currentKeyword) return list;
@@ -84,9 +86,9 @@ export default function Home() {
   const finalSide = searchList(sideResources);
 
   const typeMap = {
-    app: "📱 软件工具",
-    ai: "🤖 AI教程",
-    side: "💰 副业项目"
+    app: { name: "📱 软件工具", path: "/category/app" },
+    ai: { name: "🤖 AI教程", path: "/category/ai" },
+    side: { name: "💰 副业项目", path: "/category/side" }
   };
 
   return (
@@ -106,14 +108,18 @@ export default function Home() {
         </div>
 
         <div className="columns">
+          {/* 破解软件分类 */}
           <div className="col">
-            <h2 className="col-title">📱 破解软件</h2>
+            <div className="col-header">
+              <h2 className="col-title">📱 破解软件</h2>
+              <Link href={typeMap.app.path} className="more-btn">查看更多 →</Link>
+            </div>
             <div className="list">
               {finalApp.map((item, index) => (
                 <div key={index} className="card" onClick={() => setSelectedItem(item)}>
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -122,14 +128,18 @@ export default function Home() {
             </div>
           </div>
 
+          {/* AI教程分类 */}
           <div className="col">
-            <h2 className="col-title">🤖 AI教程</h2>
+            <div className="col-header">
+              <h2 className="col-title">🤖 AI教程</h2>
+              <Link href={typeMap.ai.path} className="more-btn">查看更多 →</Link>
+            </div>
             <div className="list">
               {finalAi.map((item, index) => (
                 <div key={index} className="card" onClick={() => setSelectedItem(item)}>
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -138,14 +148,18 @@ export default function Home() {
             </div>
           </div>
 
+          {/* 副业项目分类 */}
           <div className="col">
-            <h2 className="col-title">💰 副业项目</h2>
+            <div className="col-header">
+              <h2 className="col-title">💰 副业项目</h2>
+              <Link href={typeMap.side.path} className="more-btn">查看更多 →</Link>
+            </div>
             <div className="list">
               {finalSide.map((item, index) => (
                 <div key={index} className="card" onClick={() => setSelectedItem(item)}>
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -163,7 +177,7 @@ export default function Home() {
             <span className="close-btn" onClick={() => setSelectedItem(null)}>&times;</span>
             <h1 className="modal-title">{selectedItem.title}</h1>
             <div className="modal-info">
-              <span>{typeMap[selectedItem.type as keyof typeof typeMap]}</span>
+              <span>{typeMap[selectedItem.type as keyof typeof typeMap].name}</span>
               <span>更新时间：{selectedItem.time}</span>
             </div>
             <div className="modal-desc">{selectedItem.desc}</div>
@@ -209,10 +223,17 @@ export default function Home() {
           border-radius:16px;padding:22px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
         }
-        .col-title{
-          text-align:center;font-size:18px;font-weight:bold;
-          margin-bottom:18px;color:#222;
+        .col-header{
+          display:flex;justify-content:space-between;align-items:center;
+          margin-bottom:18px;
         }
+        .col-title{
+          font-size:18px;font-weight:bold;color:#222;
+        }
+        .more-btn{
+          font-size:14px;color:#4f46e5;text-decoration:none;font-weight:bold;
+        }
+        .more-btn:hover{text-decoration:underline;}
 
         .card{
           background:#f9fafb;
