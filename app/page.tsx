@@ -15,6 +15,14 @@ export default function Home() {
       desc: "零基础学会AI提效、单人创业、全流程教程。"
     },
     {
+  title: "比目视频",
+  type: "app",
+  time: "2026-04-16",
+  linkUrl: "https://pan.quark.cn/s/10fdaaa1e223",
+  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+  top: false,
+}, 
+    {
       title: "抖音破解版无水印",
       type: "app",
       time: "2026-04-14",
