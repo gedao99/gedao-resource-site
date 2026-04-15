@@ -26,7 +26,7 @@ export default function Home() {
       desc: "零基础学会AI提效、单人创业、全流程教程。",
       top: false,
     },
-    {
+ {
   title: "星绘屋(酷漫熊系列)",
   type: "app",
   time: "2026-04-16",
