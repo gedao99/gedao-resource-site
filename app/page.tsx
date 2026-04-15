@@ -1,11 +1,12 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
 
 export default function Home() {
   const [currentSort, setCurrentSort] = useState('time');
   const [currentKeyword, setCurrentKeyword] = useState('');
   const [selectedItem, setSelectedItem] = useState<any>(null);
+  // 新增：控制查看更多弹窗
+  const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
 
   const initialResources = [
     {
@@ -67,14 +68,15 @@ export default function Home() {
     }
   };
 
-  const appList = initialResources.filter(item => item.type === 'app');
-  const aiList = initialResources.filter(item => item.type === 'ai');
-  const sideList = initialResources.filter(item => item.type === 'side');
+  // 分类数据（全部数据，用于查看更多）
+  const appList = sortResources(initialResources.filter(item => item.type === 'app'), currentSort);
+  const aiList = sortResources(initialResources.filter(item => item.type === 'ai'), currentSort);
+  const sideList = sortResources(initialResources.filter(item => item.type === 'side'), currentSort);
 
-  // 首页只展示最新的3个，剩下的去分类页看
-  const appResources = sortResources(appList, currentSort).slice(0, 3);
-  const aiResources = sortResources(aiList, currentSort).slice(0, 3);
-  const sideResources = sortResources(sideList, currentSort).slice(0, 3);
+  // 首页只展示最新的3个
+  const appResources = appList.slice(0, 3);
+  const aiResources = aiList.slice(0, 3);
+  const sideResources = sideList.slice(0, 3);
 
   const searchList = (list: any[]) => {
     if (!currentKeyword) return list;
@@ -86,9 +88,19 @@ export default function Home() {
   const finalSide = searchList(sideResources);
 
   const typeMap = {
-    app: { name: "📱 软件工具", path: "/category/app" },
-    ai: { name: "🤖 AI教程", path: "/category/ai" },
-    side: { name: "💰 副业项目", path: "/category/side" }
+    app: { name: "📱 软件工具", color: "blue" },
+    ai: { name: "🤖 AI教程", color: "purple" },
+    side: { name: "💰 副业项目", color: "green" }
+  };
+
+  // 获取查看更多的所有资源
+  const getMoreResources = (type: string) => {
+    switch (type) {
+      case 'app': return appList;
+      case 'ai': return aiList;
+      case 'side': return sideList;
+      default: return [];
+    }
   };
 
   return (
@@ -108,11 +120,11 @@ export default function Home() {
         </div>
 
         <div className="columns">
-          {/* 破解软件分类 */}
+          {/* 破解软件 */}
           <div className="col">
             <div className="col-header">
               <h2 className="col-title">📱 破解软件</h2>
-              <Link href={typeMap.app.path} className="more-btn">查看更多 →</Link>
+              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'app', show: true })}>查看更多 →</button>
             </div>
             <div className="list">
               {finalApp.map((item, index) => (
@@ -128,11 +140,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* AI教程分类 */}
+          {/* AI教程 */}
           <div className="col">
             <div className="col-header">
               <h2 className="col-title">🤖 AI教程</h2>
-              <Link href={typeMap.ai.path} className="more-btn">查看更多 →</Link>
+              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'ai', show: true })}>查看更多 →</button>
             </div>
             <div className="list">
               {finalAi.map((item, index) => (
@@ -148,11 +160,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 副业项目分类 */}
+          {/* 副业项目 */}
           <div className="col">
             <div className="col-header">
               <h2 className="col-title">💰 副业项目</h2>
-              <Link href={typeMap.side.path} className="more-btn">查看更多 →</Link>
+              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'side', show: true })}>查看更多 →</button>
             </div>
             <div className="list">
               {finalSide.map((item, index) => (
@@ -186,15 +198,37 @@ export default function Home() {
         </div>
       )}
 
+      {/* 查看更多弹窗（核心！解决404） */}
+      {showMoreModal.show && (
+        <div className="modal" onClick={() => setShowMoreModal({ type: null, show: false })}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setShowMoreModal({ type: null, show: false })}>&times;</span>
+            <h1 className="modal-title">{typeMap[showMoreModal.type as keyof typeof typeMap]?.name || "全部资源"}</h1>
+            <div className="list">
+              {getMoreResources(showMoreModal.type as string).map((item, index) => (
+                <div key={index} className="card" onClick={() => { setSelectedItem(item); setShowMoreModal({ type: null, show: false }); }}>
+                  <div className="card-title">{item.title}</div>
+                  <div className="card-info">
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
+                    <span>{item.time}</span>
+                  </div>
+                  <div className="card-btn">查看详情</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx global>{`
         *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
         html,body{
           background:url('https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_gen_image/cd457466542c42bab2095994e3f29e02.jpeg~tplv-a9rns2rl98-image_dld_watermark_1_6b.png?lk3s=8e244e95&rcl=20260415045342E70F294401205B79CB5A&rrcfp=e875b5a5&x-expires=2091560024&x-signature=W1W6iw%2Balw6D%2F1rhf306nPtxvC0%3D') !important;
-          background-size:cover !important;
-          background-position:center !important;
-          background-attachment:fixed !important;
-          background-repeat:no-repeat !important;
-          min-height:100vh;
+        background-size:cover !important;
+        background-position:center !important;
+        background-attachment:fixed !important;
+        background-repeat:no-repeat !important;
+        min-height:100vh;
         }
         .all{padding:30px 15px}
         .container{max-width:1200px;margin:0 auto}
@@ -232,6 +266,7 @@ export default function Home() {
         }
         .more-btn{
           font-size:14px;color:#4f46e5;text-decoration:none;font-weight:bold;
+          background:none;border:none;cursor:pointer;
         }
         .more-btn:hover{text-decoration:underline;}
 
@@ -262,6 +297,7 @@ export default function Home() {
         .modal-content{
           background:#fff;border-radius:20px;padding:30px;
           max-width:700px;width:90%;position:relative;
+          max-height:80vh;overflow-y:auto;
         }
         .close-btn{
           position:absolute;top:15px;right:15px;font-size:24px;
