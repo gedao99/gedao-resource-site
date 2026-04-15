@@ -2,82 +2,95 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [currentSort, setCurrentSort] = useState('time');
   const [currentKeyword, setCurrentKeyword] = useState('');
   const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
 
+  // ====================== 资源列表（可置顶） ======================
   const initialResources = [
+    // ============== 置顶资源 ==============
+    {
+      title: "【置顶】爱影视(爱电影) 永久可用",
+      type: "app",
+      time: "2026-04-15",
+      linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
+      desc: "已优化最新版本，无广告",
+      top: true, // ✅ 加这个就是置顶
+    },
+    // ============== 普通资源 ==============
     {
       title: "2026AI私教实战课：从AI原理到全场景实操",
       type: "ai",
       time: "2026-04-15",
       linkUrl: "https://pan.quark.cn/s/3dedc19b4aa6",
-      desc: "零基础学会AI提效、单人创业、全流程教程。"
+      desc: "零基础学会AI提效、单人创业、全流程教程。",
+      top: false,
     },
-    {
-  title: "比目视频",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/10fdaaa1e223",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-}, 
     {
       title: "抖音破解版无水印",
       type: "app",
       time: "2026-04-14",
       linkUrl: "https://你的链接",
-      desc: "无水印下载、去广告、高清解析。"
+      desc: "无水印下载、去广告、高清解析。",
+      top: false,
     },
     {
       title: "ChatGPT 4o 使用教程",
       type: "ai",
       time: "2026-04-13",
       linkUrl: "https://你的链接",
-      desc: "最新4o模型使用技巧、提示词模板。"
+      desc: "最新4o模型使用技巧、提示词模板。",
+      top: false,
     },
     {
       title: "小红书副业变现课",
       type: "side",
       time: "2026-04-12",
       linkUrl: "https://你的链接",
-      desc: "0粉起号、选品、文案、变现全流程。"
+      desc: "0粉起号、选品、文案、变现全流程。",
+      top: false,
     },
     {
       title: "PS 2025 永久激活版",
       type: "app",
       time: "2026-04-11",
       linkUrl: "https://你的链接",
-      desc: "完整插件、无广告、永久使用。"
+      desc: "完整插件、无广告、永久使用。",
+      top: false,
     },
     {
       title: "闲鱼无货源赚钱课",
       type: "side",
       time: "2026-04-09",
       linkUrl: "https://你的链接",
-      desc: "不用囤货，一部手机就能做。"
+      desc: "不用囤货，一部手机就能做。",
+      top: false,
     },
   ];
 
-  const sortResources = (list: any[], sortType: string) => {
-    if (sortType === 'time') {
-      return [...list].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-    } else {
-      return [...list].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
-    }
+  // ====================== 排序规则：置顶永远在最上面 ======================
+  const sortResources = (list: any[]) => {
+    return [...list].sort((a, b) => {
+      if (a.top && !b.top) return -1;
+      if (!a.top && b.top) return 1;
+      return new Date(b.time).getTime() - new Date(a.time).getTime();
+    });
   };
 
-  const appList = initialResources.filter(item => item.type === 'app');
-  const aiList = initialResources.filter(item => item.type === 'ai');
-  const sideList = initialResources.filter(item => item.type === 'side');
+  // 分类数据
+  const appList = sortResources(initialResources.filter(item => item.type === 'app'));
+  const aiList = sortResources(initialResources.filter(item => item.type === 'ai'));
+  const sideList = sortResources(initialResources.filter(item => item.type === 'side'));
 
-  const appResources = sortResources(appList, currentSort);
-  const aiResources = sortResources(aiList, currentSort);
-  const sideResources = sortResources(sideList, currentSort);
+  // 首页显示 3 条
+  const appResources = appList.slice(0, 3);
+  const aiResources = aiList.slice(0, 3);
+  const sideResources = sideList.slice(0, 3);
 
+  // 搜索
   const searchList = (list: any[]) => {
     if (!currentKeyword) return list;
-    return list.filter(item => item.title.includes(currentKeyword));
+    return list.filter(item => item.title.toLowerCase().includes(currentKeyword.toLowerCase()));
   };
 
   const finalApp = searchList(appResources);
@@ -85,9 +98,19 @@ export default function Home() {
   const finalSide = searchList(sideResources);
 
   const typeMap = {
-    app: "📱 软件工具",
-    ai: "🤖 AI教程",
-    side: "💰 副业项目"
+    app: { name: "📱 软件工具" },
+    ai: { name: "🤖 AI教程" },
+    side: { name: "💰 副业项目" },
+  };
+
+  // 获取查看更多的全部资源
+  const getMoreResources = (type: string) => {
+    switch (type) {
+      case 'app': return appList;
+      case 'ai': return aiList;
+      case 'side': return sideList;
+      default: return [];
+    }
   };
 
   return (
@@ -101,20 +124,25 @@ export default function Home() {
         <div className="search">
           <input
             value={currentKeyword}
-            onChange={e => setCurrentKeyword(e.target.value)}
+            onChange={(e) => setCurrentKeyword(e.target.value)}
             placeholder="🔍 搜索资源..."
           />
         </div>
 
         <div className="columns">
+          {/* 软件 */}
           <div className="col">
-            <h2 className="col-title">📱 破解软件</h2>
+            <div className="col-header">
+              <h2 className="col-title">📱 破解软件</h2>
+              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'app', show: true })}>查看更多 →</button>
+            </div>
             <div className="list">
               {finalApp.map((item, index) => (
-                <div key={index} className="card" onClick={() => setSelectedItem(item)}>
+                <div key={index} className={`card ${item.top ? 'card-top' : ''}`} onClick={() => setSelectedItem(item)}>
+                  {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -123,14 +151,19 @@ export default function Home() {
             </div>
           </div>
 
+          {/* AI */}
           <div className="col">
-            <h2 className="col-title">🤖 AI教程</h2>
+            <div className="col-header">
+              <h2 className="col-title">🤖 AI教程</h2>
+              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'ai', show: true })}>查看更多 →</button>
+            </div>
             <div className="list">
               {finalAi.map((item, index) => (
-                <div key={index} className="card" onClick={() => setSelectedItem(item)}>
+                <div key={index} className={`card ${item.top ? 'card-top' : ''}`} onClick={() => setSelectedItem(item)}>
+                  {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -139,14 +172,19 @@ export default function Home() {
             </div>
           </div>
 
+          {/* 副业 */}
           <div className="col">
-            <h2 className="col-title">💰 副业项目</h2>
+            <div className="col-header">
+              <h2 className="col-title">💰 副业项目</h2>
+              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'side', show: true })}>查看更多 →</button>
+            </div>
             <div className="list">
               {finalSide.map((item, index) => (
-                <div key={index} className="card" onClick={() => setSelectedItem(item)}>
+                <div key={index} className={`card ${item.top ? 'card-top' : ''}`} onClick={() => setSelectedItem(item)}>
+                  {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -160,15 +198,38 @@ export default function Home() {
       {/* 详情弹窗 */}
       {selectedItem && (
         <div className="modal" onClick={() => setSelectedItem(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setSelectedItem(null)}>&times;</span>
             <h1 className="modal-title">{selectedItem.title}</h1>
             <div className="modal-info">
-              <span>{typeMap[selectedItem.type as keyof typeof typeMap]}</span>
+              <span>{typeMap[selectedItem.type as keyof typeof typeMap].name}</span>
               <span>更新时间：{selectedItem.time}</span>
             </div>
             <div className="modal-desc">{selectedItem.desc}</div>
             <a href={selectedItem.linkUrl} className="modal-btn" target="_blank" rel="noopener noreferrer">🔗 立即转存 / 下载</a>
+          </div>
+        </div>
+      )}
+
+      {/* 查看更多弹窗 */}
+      {showMoreModal.show && (
+        <div className="modal" onClick={() => setShowMoreModal({ type: null, show: false })}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setShowMoreModal({ type: null, show: false })}>&times;</span>
+            <h1 className="modal-title">{typeMap[showMoreModal.type as keyof typeof typeMap]?.name || "全部资源"}</h1>
+            <div className="list">
+              {getMoreResources(showMoreModal.type as string).map((item, index) => (
+                <div key={index} className={`card ${item.top ? 'card-top' : ''}`} onClick={() => { setSelectedItem(item); setShowMoreModal({ type: null, show: false }); }}>
+                  {item.top && <div className="top-tag">置顶</div>}
+                  <div className="card-title">{item.title}</div>
+                  <div className="card-info">
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
+                    <span>{item.time}</span>
+                  </div>
+                  <div className="card-btn">查看详情</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -210,15 +271,34 @@ export default function Home() {
           border-radius:16px;padding:22px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
         }
-        .col-title{
-          text-align:center;font-size:18px;font-weight:bold;
-          margin-bottom:18px;color:#222;
+        .col-header{
+          display:flex;justify-content:space-between;align-items:center;
+          margin-bottom:18px;
         }
+        .col-title{
+          font-size:18px;font-weight:bold;color:#222;
+        }
+        .more-btn{
+          font-size:14px;color:#4f46e5;font-weight:bold;
+          background:none;border:none;cursor:pointer;
+        }
+        .more-btn:hover{text-decoration:underline;}
 
+        /* 置顶卡片样式 */
         .card{
           background:#f9fafb;
           border-radius:12px;padding:16px;
           margin-bottom:10px;cursor:pointer;
+          position:relative;
+        }
+        .card-top{
+          border:2px solid #ff6b6b !important;
+          background:#fff5f5 !important;
+        }
+        .top-tag{
+          position:absolute;top:8px;right:8px;
+          background:#ff6b6b;color:#fff;
+          font-size:12px;padding:2px 6px;border-radius:4px;
         }
         .card-title{font-weight:bold;margin-bottom:8px}
         .card-info{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#666;margin-bottom:10px}
@@ -233,7 +313,7 @@ export default function Home() {
           text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:bold;
         }
 
-        /* 弹窗样式 */
+        /* 弹窗 */
         .modal{
           position:fixed;top:0;left:0;width:100%;height:100%;
           background:rgba(0,0,0,0.7);z-index:999;
@@ -242,6 +322,7 @@ export default function Home() {
         .modal-content{
           background:#fff;border-radius:20px;padding:30px;
           max-width:700px;width:90%;position:relative;
+          max-height:80vh;overflow-y:auto;
         }
         .close-btn{
           position:absolute;top:15px;right:15px;font-size:24px;
