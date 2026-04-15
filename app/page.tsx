@@ -35,6 +35,22 @@ export default function Home() {
       top: false,
     },
     {
+  title: "贝利自动点击器",
+  type: "app",
+  time: "2026-04-16",
+  linkUrl: "https://pan.quark.cn/s/fca0907315a1",
+  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+  top: false,
+},
+{
+  title: "比目视频",
+  type: "app",
+  time: "2026-04-16",
+  linkUrl: "https://pan.quark.cn/s/10fdaaa1e223",
+  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+  top: false,
+},
+    {
       title: "ChatGPT 4o 使用教程",
       type: "ai",
       time: "2026-04-13",
