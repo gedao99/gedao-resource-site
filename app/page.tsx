@@ -1312,7 +1312,7 @@ export default function Home() {
       <div className="container">
         <div className="title">
           <h1>格道资源站</h1>
-          <p>精品软件 | AI教程 | 副业项目</p>
+          <p>破解版app | AI教程 | 副业项目</p>
         </div>
         <div className="search">
           <input
