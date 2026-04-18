@@ -1,12 +1,16 @@
 'use client';
 import { useState, useEffect } from 'react';
 export default function Home() {
+ 'use client';
+import { useState, useEffect } from 'react';
+
+export default function Home() {
   const [currentKeyword, setCurrentKeyword] = useState('');
-// 给 selectedItem 加 any 类型（适配资源对象）
-const [selectedItem, setSelectedItem] = useState<any>(null);
-// 给 showMoreModal 加类型注解，明确 type 可以是字符串或 null
-const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
-const [showInviteModal, setShowInviteModal] = useState(false);
+  // 给 selectedItem 加 any 类型，适配资源对象
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  // 给 showMoreModal 加类型注解，明确 type 可以是字符串或 null
+  const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   // 页面加载判断弹窗逻辑
   useEffect(() => {
@@ -17,6 +21,12 @@ const [showInviteModal, setShowInviteModal] = useState(false);
       return;
     }
     // 2. 没加群，判断今天是否点了下次再说
+    const today = new Date().toLocaleDateString();
+    const closedDate = localStorage.getItem('popupClosedDate');
+    if (closedDate !== today) {
+      setShowInviteModal(true);
+    }
+  }, []);
     const today = new Date().toLocaleDateString();
     const closedDate = localStorage.getItem('popupClosedDate');
     if (closedDate !== today) {
