@@ -2,34 +2,37 @@
 import { useState, useEffect } from 'react';
 export default function Home() {
   const [currentKeyword, setCurrentKeyword] = useState('');
-  const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
-  // AI弹窗控制
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showMoreModal, setShowMoreModal] = useState({ type: null, show: false });
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [noPrompt, setNoPrompt] = useState(false); // 不再提示勾选状态
 
-  // 页面加载时判断是否弹窗
+  // 页面加载判断弹窗逻辑
   useEffect(() => {
-    const neverPrompt = localStorage.getItem('neverPromptAI');
-    if (!neverPrompt) {
+    // 1. 如果已经加入群，永久不弹
+    const hasJoined = localStorage.getItem('userJoinedAIGroup');
+    if (hasJoined) {
+      setShowInviteModal(false);
+      return;
+    }
+    // 2. 没加群，判断今天是否点了下次再说
+    const today = new Date().toLocaleDateString();
+    const closedDate = localStorage.getItem('popupClosedDate');
+    if (closedDate !== today) {
       setShowInviteModal(true);
     }
   }, []);
 
-  // 同意加入QQ群
+  // 同意加入群：永久不再弹出
   const handleJoinGroup = () => {
-    if (noPrompt) {
-      localStorage.setItem('neverPromptAI', 'true');
-    }
+    localStorage.setItem('userJoinedAIGroup', 'true');
     window.open("https://qm.qq.com/q/KPkPCBv6MK", "_blank");
     setShowInviteModal(false);
   };
 
-  // 下次再说
+  // 下次再说：今日不弹，次日再弹
   const handleSkip = () => {
-    if (noPrompt) {
-      localStorage.setItem('neverPromptAI', 'true');
-    }
+    const today = new Date().toLocaleDateString();
+    localStorage.setItem('popupClosedDate', today);
     setShowInviteModal(false);
   };
 
@@ -44,1288 +47,584 @@ export default function Home() {
       top: true,
     },
     {
-      title: "2026AI私教实战课：从AI原理到全场景实操",
-      type: "ai",
-      time: "2026-04-15",
-      linkUrl: "https://pan.quark.cn/s/3dedc19b4aa6",
-      desc: "零基础学会AI提效、单人创业、全流程教程。",
-      top: false,
-    },
-            {
-  title: "小说加写作训练营，带你分析如何在当下脱颖而出，开启你的职业创作之路",
-  type: "side",
-  time: "2026-04-16",
-  linkUrl: "https://pan.baidu.com/s/17OJC5vE9QqWbJr0xVfyIkA?pwd=h2tk",
-  desc: "【课程介绍】当下小说创作赛道竞争激烈，海量作品扎堆，想脱颖而出、实现从爱好到职业的跨越，仅凭一腔热情远远不够。我们的小说写作训练营，专为渴望深耕创作、打造个人IP的创作者量身打造，带你跳出盲目写作的误区，精准掌握职业创作的核心逻辑。在这里，我们不堆砌空洞理论，而是聚焦当下读者喜好与市场需求，拆解爆款小说的叙事技巧、人物塑造、节奏把控，从选题立意到情节打磨，从语言润色到投稿变现，每一个环节都有专业导师手把手指导。无论你是零基础小白，还是有一定基础却陷入瓶颈的写作者，都能在这里找到精准定位，突破创作瓶颈，学会用专业方法打造有记忆点、有传播力的作品。训练营更提供专属资源对接、作品打磨反馈、同行交流社群，助力你打通职业创作的每一步，从提笔写作到实现变现，真正开启属于你的职业创作之路，在千军万马的创作浪潮中抢占先机、脱颖而出。",
-  top: false,
-},
-{
-  title: "TikTok 多平台 APP 拉新，完整流程教学，新手也能上手",
-  type: "side",
-  time: "2026-04-16",
-  linkUrl: "https://pan.baidu.com/s/19qeBr7P7mbgO8UPqpHgEMg?pwd=h2tk",
-  desc: "【项目介绍】你有没有发现：国内互联网已经卷成红海，刷视频、做副业、抢流量，累死累活赚点辛苦钱；而海外，尤其TikTok生态，还在野蛮生长、遍地是机会。不用露脸、不用直播、不用囤货、不用外语很好。会套模板、会加字幕、会挂锚点，就能干。很多人看不起“拉新”，觉得low、觉得不长久。但真相是：稳定、合法、官方结算、不扣量、长期有单的项目，才是普通人最该抓的。你以为的高大上，大多是割韭菜；你看不起的小项目，别人悄悄日入几千。别再内耗：想赚钱，就别纠结面子、别害怕新手、别等“准备好”。环境搭好、账号养好、模板套好、文案写好、发出去——干就完了，数据会说话。海外的钱，真的很好赚：用户好奇、平台宽容、佣金高、竞争小。你在国内刷抖音消磨时间，别人在TikTok发同款视频赚美金。认知差，就是最大的信息差；行动差，就是最大的贫富差。不用羡慕别人日入几千。你缺的不是能力，不是资源，不是运气——你缺的是一次跳出舒适区、看懂海外流量、立刻动手的勇气。从今天起：关掉无效社交，少刷无用视频。花一周把TK拉新流程跑通、账号跑顺。下个月，你会感谢现在果断的自己。海外TK，不内耗、不将就、只搞钱。愿你抓住这波红利，把时间换成美金，把流量变成收入。",
-  top: false,
-},
-{
-  title: "抖音10W粉丝的AI脱口秀教学，普通人也能上手的AI短视频项目，5分钟学会，撸伙伴计划收益",
-  type: "side",
-  time: "2026-04-16",
-  linkUrl: "https://pan.baidu.com/s/1-bUQWuW1gQmEn65ClfHc1A?pwd=h2tk",
-  desc: "【项目介绍】很多人以为做短视频，难在不会拍、不会剪、不会出镜。但这个项目，刚好把这3个问题都绕开了。你不用真人出镜，不用复杂拍摄，一台电脑，3个工具就够：豆包、即梦、剪映。而且这类内容为什么容易起量？因为它天然符合平台喜欢的东西：有情绪，有观点，有节奏，还有评论区互动感。所以它的本质，不是“AI整活”。而是：把高互动内容，做成一条可以批量复制的流水线。这个项目为什么值得看？我先讲结论：这类项目最适合普通人的地方，不是暴利，而是低门槛、可复制、容易批量。很多项目听起来很賺钱，但你一看流程就知道，不适合大多数人。要么要真人出镜，要么要强表达能力，要么要团队配合。但AI脱口秀不一样。它把内容拆成了几个模块：文案、配音、画面、剪辑。每一步都可以用工具完成。也就是说，你做的不是传统创作，而是在搭一条内容生产线。这就很重要。因为真正能賺钱的项目，拼的从来不是你偶尔做出一个爆款。而是：你能不能把一个有效动作，重复做100次。",
-  top: false,
-},
-{
-  title: "AI爆火古风养生赛道，日收益1000+ 单条作品点赞破万+，可矩阵多号操作",
-  type: "side",
-  time: "2026-04-16",
-  linkUrl: "https://pan.baidu.com/s/1-AuDYyt69z_UyUslxybsqg?pwd=h2tk",
-  desc: "【项目介绍】当下养生赛道迎来全新风口——AI+古风吐槽式养生，打破传统养生内容的枯燥说教，以“老祖宗的智慧+年轻人的吐槽”模式，快速引爆流量，轻松实现日收益1000+，单条作品点赞破万+，零门槛适配小白，可批量创作、矩阵多号放大收益，新手也能快速起号变现。精准直击当代年轻人核心痛点：生活压力、工作内耗叠加，熬夜、暴饮暴食、久坐不动成为常态，脱发、气血不足、颈椎不适、内分泌紊乱等问题频发，年轻人既焦虑又渴望简单有效的养生方式，却抵触生硬的健康说教。而我们的项目，正是抓住这一核心需求，用另类吐槽的呈现形式，搭配古风元素，戳中年轻人的情绪共鸣点，让养生内容不再枯燥，自带流量属性。",
-  top: false,
-},
-        {
-  title: "AnyPlay(万能视频音频播放器)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/5fb3836b94e0",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "AppLock PRO(应用锁)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6fa0eba99ccb",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱其意(影视)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/de5657beabf6",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "傲软抠图",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d4823ccb6962",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "AR拍照翻译器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/ae5f973dc718",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "傲软投屏",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/a27c0679c150",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Ask AI(支持GPT4o、claude、GeminiPro)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b2a44c022be8",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱扫描",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3e4b85fb823d",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱听书",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/22115eb95d21",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Audio Editor(专业音频编辑)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/289127f01784",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "AutoCMD+",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/47f5321920f2",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "安心计件",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/8e77b3343391",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "安心记加班",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/311a2a58f1b7",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱影视(爱电影)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/5466218ca05f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱颜相机",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/60a590d867c9",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "AZ Screen Recorder(专业录屏)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/80f170af104a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "安卓清理君",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/2790541e04b6",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "B612咔叽",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/02b9c6fdb7df",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Background Eraser - 抠图软件",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/92c76abe7a5a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "帮帮字幕翻译",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6ace3cd52886",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "百度贴吧",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/f24f98c0b1ca",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "哔嘀影视",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d1a29ba45655",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "BeautyPlus(美颜相机)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/794152f3db0a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "布谷鸟配音",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/01e9442bdb7b",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "薄荷记账",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6ff0e5033cde",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "薄荷下载",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/8acfe11d5119",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "biubiu加速器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d30efbc64fd2",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "布蕾4K",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/73bea733bdee",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "哔哩哔哩",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/a3c5b0bdc190",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Blurrr(视频剪辑)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/5de30d132c7d",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "贝利自动点击器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/fca0907315a1",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "比目视频",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/10fdaaa1e223",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "比漫熊",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/9f8e2f7da8e3",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Body Editor(美颜修图)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/82a934143965",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "笔趣阁",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/18864908628f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "笔趣书阁(多源小说漫画)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/52ee6557a3a8",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "白蛇影视",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/10a03af7c2d0",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "冰箱",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/a158272c8675",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "冰箱 IceBox：自动冻结・省电神器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7903e9c4980c",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "边缘视频",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/11e89669fce8",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-    {
-  title: "(隐私)计算器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b9fc3b93509f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
   title: "4K剧下饭(原剧下饭、剧永久)",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/94b943e94e5e",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "15日天气预报",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/1e4d9c565983",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/123d92d3e60d",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
   title: "23影视4K",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/9f86a2771b48",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "30天内练出六块腹肌",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/81cde53f00e4",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "99手游加速器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/5c2937fe058e",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "123动漫（原咖啡4k、DUOFUN）",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c653312f474b",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "123云盘",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/11e82a10ff81",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "365日历",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/46b7290ef1f2",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "777影视",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b2388112d3b6",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱笔思画X",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/fe72e3aa316f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "阿柴记账",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/2336df87bb9a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "A次元(动漫)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/69e4721147f4",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "AdGuard(拦截广告神器)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/4bdd03563bab",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Adobe Photoshop Express(PS手机版)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/90a4d9745fc6",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱读小说",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d190d62c65f5",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/89bdaa32c499",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
   title: "爱电影",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/37550b16a8f0",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/d6b052f6da40",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AE特效视频片头大师APP",
+  title: "豆丁视频4K",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/aa9626ea684c",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/af3e669daed8",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AH视频",
+  title: "短剧汪4K",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/0e680235067a",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/ee4b1ec9efe5",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI Enhancer(AI图片增强)",
+  title: "电影驿站",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3d14e903faf2",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/4b4cbc48a50e",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI Photo Enhancer(图片视频画质修复增强)",
+  title: "番茄免费小说",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/54ad4c473840",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/8ec9f0b3660d",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI Photo(AI照片生成器)",
+  title: "红果免费短剧",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c6810fe06da6",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/8411fc695654",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI PPT",
+  title: "囧漫漫画",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b7ae9e758369",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/6abe6f67f5a9",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI Retouch - 移除杂物(AI抠图绘图画质修复)",
+  title: "剧下饭(4K)",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3d580ee1f1a3",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/b44f8a6260c3",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI Video Enhancer(AI视频增强修复)",
+  title: "橘汁TV版",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c4b6981bb8a9",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/2b63223b01ca",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI绘画大师",
+  title: "开发助手",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/f4004228fa7c",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/b0b6b4b5e44c",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AirBrush(AI修图、图片视频修复)",
+  title: "酷漫星",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3bfe9b53a5b4",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/73d080c2b978",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI特效相机",
+  title: "喵趣(原轻漫岛)",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c25796b2f29c",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/b1f20b964c82",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI万能写作",
+  title: "漫拾光漫画",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/831fdc34f369",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/348165d20554",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI网盘搜索",
+  title: "喵呜漫画",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/fbb9c4ad27d2",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/ce1700f0a84e",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI写作助手",
+  title: "漫星海",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/4b2683389ab2",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/4d7f1c29d1a6",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI智绘",
+  title: "轻漫岛",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/e435cfc35615",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/0c03fc42af24",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "AI助手",
+  title: "七猫免费小说",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3252e1bf5850",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱剪辑",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/a73ee1d6bae5",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱看剧场",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/711aa86730b3",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱看剧Fax(原追忆影视)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/bb329612fea8",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "爱看影视",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/44577488cdb7",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Al ChatBot(AI聊天)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d6e1fd1a4303",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Alarm Clock Xtreme(终极闹钟)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/091f637b93f5",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "Anti-recall(防撤回)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/1a51bfcf3d78",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-    {
-  title: "微商视频助手",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/44d3eea7a33f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "微商侠",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b4751959e0bc",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "微商助手",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/fc04d3aea67e",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "微商作图",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/f273a193efd3",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "无痛单词",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/50866149430c",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "无他相机",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/9a1bb9b02d12",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "哇哇影视",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/79ba605266bd",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万兴喵影",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/776b3fb33257",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万兴PDF",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/0b3829bb9657",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "外星人加速器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/07c21284fcd1",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万象小组件",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/2c4af6ac4608",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "外语翻译官",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/99bc84bf9d22",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "我要做计划",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/da93d11ee237",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "问真八字",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b073e4ca6ae3",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "文字朗读神器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7ef853f6a2f4",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "文字提取大师",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3ac5c283e08f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "文字转语音配音软件",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7753424d94db",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小6加速器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/52f5f2102157",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小白录屏",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6185cb4412dc",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "新笔趣阁",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/062b7d15a983",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "雪豹视频",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3004068fa757",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "新版摘星",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c8dd5c8f924e",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "XCast - 投屏大师",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6fbea85336e2",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "下厨房",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/b1c2c3278556",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小触控",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/285df28a767e",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小草视频",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7339a74fd654",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/34abf50efc9a",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
   title: "小豆视界",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/0a137389f99e",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/fd52f3bb2428",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "心动视界4K",
+  title: "星空动漫",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/e1501fb10aee",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/6262d1b69acb",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "西饭短剧",
+  title: "星空影视(原星空动漫)",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/720405942302",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/a60909ada8d6",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "稀饭动漫",
+  title: "鸭趣听书",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d797b39bca6c",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/6c13ed9ceed9",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "喜番免费短剧",
+  title: "追番达人",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/2c0b1ec65a79",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/e7a237bfbb18",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "讯飞输入法",
+  title: "紫金草视频4K",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/f529e1f8765d",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/f4d1111a13c1",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "小肥羊漫画",
+  title: "追片喵4K",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7b6d9cdb7430",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/3313ff3666ad",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "修改牛水印相机",
+  title: "追忆影视",
   type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c9f3a3e69018",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/cf98a2fff7ea",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
 {
-  title: "修改水印相机",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/616531b9e39b",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+  title: "AI编程第三期",
+  type: "ai",
+  time: "2026-04-19",
+  linkUrl: "https://pan.baidu.com/s/1NnyHkqwvufyye-utHVInPA?pwd=uyhp",
+  desc: "《AI编程实战课-第三期》零基础全链路AI编程实战，覆盖产品开发到冷启动变现全流程！",
   top: false,
 },
 {
-  title: "小狐狸(影视)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/92fda71fff01",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+  title: "AI真人短剧训练营",
+  type: "ai",
+  time: "2026-04-19",
+  linkUrl: "https://pan.baidu.com/s/1fBt69UXFJycWB2H0MKQUgg?pwd=uyhp",
+  desc: "21天AI真人短剧全流程实战，从剧本→分镜→生成→剪辑，小白也能做出电影感短剧！",
   top: false,
 },
 {
-  title: "星绘漫",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d852e3ff5a81",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+  title: "Ai漫剧制作全流程",
+  type: "ai",
+  time: "2026-04-19",
+  linkUrl: "https://pan.quark.cn/s/f6ddc7055054",
+  desc: "AI漫剧制作全流程实战教学，零基础快速成片，高效批量产出高质量漫剧内容！",
   top: false,
 },
-{
-  title: "小黑猫漫画",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/289c4a43cf9a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小黄人(影视)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/dded8c0d6885",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小红书",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7ae47cc00352",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "XRecorder(专业录屏)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/8f25b6219e65",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小时工记账",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/c416e20627eb",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小柿子(影视)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/280e3b42a900",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "醒图",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/0cc4113b720d",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "修图君抠图P图大师",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/30b0e1d579ae",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小歪微商",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/13fa3fca7d0d",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小X分身",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/5df25d2ba027",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小习惯",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/ce3b4dadfbea",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小熊录屏",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/8dfaf948fa17",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小熊猫(影视)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/917b99ddc6cb",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "消息群发",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/dfccdc642dde",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小熊视频FAN",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/a84927137df2",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小熊文件工具箱",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/2267c17e6b9a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "西西小屋",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6c2d1b78b68a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小熊影视",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/6ec3fb538daa",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小小追书",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d934229ff390",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "型影",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/f36537bf96dd",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小影",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/fd1ef3093fa2",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "小羊4K",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/078fc9fa162f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "咸鱼4K(看世界新版)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/908b23bf7ea0",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万能空调遥控器",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/7932c8b2965f",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万年历",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/bb4ef0d295fb",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万年历(2)",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/856e076d4ee1",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万年历黄历",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/67c4f5975192",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万能水印相机打卡",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/41f3340eae22",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "万能钥匙",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/3b1bcb4bd76a",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "WPS Office",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/9809f4baa431",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "微商大师",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/885c1da74cdf",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "微商管家",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/28f45143db6b",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "微商工具箱",
-  type: "app",
-  time: "2026-04-16",
-  linkUrl: "https://pan.quark.cn/s/d82c4dfd92f5",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
+    {
+      title: "比目视频",
+      type: "app",
+      time: "2026-04-16",
+      linkUrl: "https://pan.quark.cn/s/10fdaaa1e223",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
     {
       title: "抖音破解版无水印",
       type: "app",
-      time: "2026-04-14",
-      linkUrl: "https://你的链接",
-      desc: "无水印下载、去广告、高清解析。",
+      time: "2026-04-16",
+      linkUrl: "",
+      desc: "",
       top: false,
     },
     {
-      title: "ChatGPT 4o 使用教程",
-      type: "ai",
-      time: "2026-04-13",
-      linkUrl: "https://你的链接",
-      desc: "最新4o模型使用技巧、提示词模板。",
-      top: false,
-    },
-    {
-      title: "小红书副业变现课",
-      type: "side",
-      time: "2026-04-12",
-      linkUrl: "https://你的链接",
-      desc: "0粉起号、选品、文案、变现全流程。",
-      top: false,
-    },
-    {
-      title: "PS 2025 永久激活版",
+      title: "壁纸多多",
       type: "app",
-      time: "2026-04-11",
-      linkUrl: "https://你的链接",
-      desc: "完整插件、无广告、永久使用。",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/e3e35ac4b538",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
       top: false,
     },
     {
-      title: "闲鱼无货源赚钱课",
-      type: "side",
-      time: "2026-04-09",
-      linkUrl: "https://你的链接",
-      desc: "不用囤货，一部手机就能做。",
+      title: "伴奏大师",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/8fb05718a7f9",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "壁纸酷酷",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/7971af8c9d7c",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "暴走P图",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/fd6a7f9f3dc5",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "不做手机控",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/1bb208c7fde6",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "壁纸秀秀",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/b4baaac0139c",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "八爪鱼遥控",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/0ee65d87921e",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "标志制造商(logo制作)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/4e6781e92785",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "CAD",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/2340aee6bb11",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "CAD看图大师",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/1a3c239b77e9",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "CAD看图王(国际版)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/e8f1c3f0642e",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "CAD手机看图",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/24ee75565a4b",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "CC加速器",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/93fad008d99a",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "常读免费小说",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/da0087652e76",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "词根单词",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/9300baaa90fc",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "橙光视频",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/ae7dd40aa3c2",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Chat Smith",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/1ff29ddbb219",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "ChatAI AI Chatbot(AI聊天支持gpt4o，AI绘图)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/e465d06ec572",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Chatbot 4.o AI(AI聊天)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/ad1cc3a703bd",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Chatbot AI(AI聊天支持GPT4o)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/6458ff5c096d",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "ChatOn(AI聊天)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/5ba33ea564ac",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Chic相机",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/2c47bf62b49b",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "彩虹视频",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/3467c65a4945",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Cimoc(内置多源漫画)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/690dc08b632f",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "测距测量仪",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/ee48557403c5",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "超级单词表",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/d0b4d5c7c0f7",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "超级格式转换工厂",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/410e149910f2",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "超级计算器 (多功能计算器+记账)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/f457dee85b29",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "超级截图录屏大师",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/4058432f51e4",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "超级录音机",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/3313d0203c2d",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "超级音乐编辑器",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/76dc159dd01f",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "ClevNote(笔记)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/db3cd89a913f",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "CliCli动漫",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/180f4be9a45b",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "车来了",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/e2859cc80770",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Clone App(小X分身国际版)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/eb21178b1ccd",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "测亩宝",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/9012c5c713be",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "朝暮计划",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/8c76a2858d19",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "创漫客(酷漫熊新版)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/1e39ffdc26c9",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "Coffee4K(咖啡4k)",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/60715e081108",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
+      top: false,
+    },
+    {
+      title: "COLA漫画",
+      type: "app",
+      time: "2026-04-19",
+      linkUrl: "https://pan.quark.cn/s/138db592eaed",
+      desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
       top: false,
     },
   ];
 
-  const sortResources = (list: any[]) => {
+  const sortResources = (list) => {
     return [...list].sort((a, b) => {
       if (a.top && !b.top) return -1;
       if (!a.top && b.top) return 1;
@@ -1337,7 +636,7 @@ export default function Home() {
   const aiList = sortResources(initialResources.filter(item => item.type === 'ai'));
   const sideList = sortResources(initialResources.filter(item => item.type === 'side'));
 
-  const searchList = (list: any[]) => {
+  const searchList = (list) => {
     if (!currentKeyword) return list.slice(0, 3);
     return list.filter(item => item.title.toLowerCase().includes(currentKeyword.toLowerCase()));
   };
@@ -1347,12 +646,12 @@ export default function Home() {
   const finalSide = searchList(sideList);
 
   const typeMap = {
-    app: { name: "📱 破解版app" },
+    app: { name: "📱 软件工具" },
     ai: { name: "🤖 AI教程" },
     side: { name: "💰 副业项目" },
   };
 
-  const getMoreResources = (type: string) => {
+  const getMoreResources = (type) => {
     switch (type) {
       case 'app': return appList;
       case 'ai': return aiList;
@@ -1366,13 +665,13 @@ export default function Home() {
       <div className="container">
         <div className="title">
           <h1>格道资源站</h1>
-          <p>破解版app | AI教程 | 副业项目</p>
+          <p>精品软件 | AI教程 | 副业项目</p>
         </div>
         
         {/* 滚动公告栏 */}
         <div className="notice-bar">
           <div className="notice-content">
-            本站资源完全免费分享，如果你也觉得还不错，请帮我转发给有需要的朋友；资源每日更新明细请关注公众号【格道黑科技】。
+            本站资源完全免费分享，如果你也觉得还不错，不妨将本网站转发给有需要的朋友；资源每日更新明细请关注公众号【格道黑科技】。
           </div>
         </div>
 
@@ -1380,13 +679,14 @@ export default function Home() {
         <div className="search">
           <input
             value={currentKeyword}
-            onChange={(e) => setCurrentKeyword(e.target.value)}
+            onChange={(e) => setCurrentKeyword(e.value)}
             placeholder="🔍 搜索资源..."
           />
         </div>
 
-        {/* 资源列表 */}
+        {/* 三列资源布局 */}
         <div className="columns">
+          {/* 软件 */}
           <div className="col">
             <div className="col-header">
               <h2 className="col-title">📱 破解软件</h2>
@@ -1398,7 +698,7 @@ export default function Home() {
                   {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -1406,6 +706,8 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* AI */}
           <div className="col">
             <div className="col-header">
               <h2 className="col-title">🤖 AI教程</h2>
@@ -1417,7 +719,7 @@ export default function Home() {
                   {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -1425,6 +727,8 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* 副业 */}
           <div className="col">
             <div className="col-header">
               <h2 className="col-title">💰 副业项目</h2>
@@ -1436,7 +740,7 @@ export default function Home() {
                   {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -1447,14 +751,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 详情弹窗 */}
+      {/* 资源详情弹窗 */}
       {selectedItem && (
         <div className="modal" onClick={() => setSelectedItem(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setSelectedItem(null)}>&times;</span>
             <h1 className="modal-title">{selectedItem.title}</h1>
             <div className="modal-info">
-              <span>{typeMap[selectedItem.type as keyof typeof typeMap].name}</span>
+              <span>{typeMap[selectedItem.type].name}</span>
               <span>更新时间：{selectedItem.time}</span>
             </div>
             <div className="modal-desc">{selectedItem.desc}</div>
@@ -1468,14 +772,14 @@ export default function Home() {
         <div className="modal" onClick={() => setShowMoreModal({ type: null, show: false })}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowMoreModal({ type: null, show: false })}>&times;</span>
-            <h1 className="modal-title">{typeMap[showMoreModal.type as keyof typeof typeMap]?.name || "全部资源"}</h1>
+            <h1 className="modal-title">{typeMap[showMoreModal.type]?.name || "全部资源"}</h1>
             <div className="list">
-              {getMoreResources(showMoreModal.type as string).map((item, index) => (
+              {getMoreResources(showMoreModal.type).map((item, index) => (
                 <div key={index} className={`card ${item.top ? 'card-top' : ''}`} onClick={() => { setSelectedItem(item); setShowMoreModal({ type: null, show: false }); }}>
                   {item.top && <div className="top-tag">置顶</div>}
                   <div className="card-title">{item.title}</div>
                   <div className="card-info">
-                    <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap].name}</span>
+                    <span className={`tag tag-${item.type}`}>{typeMap[item.type].name}</span>
                     <span>{item.time}</span>
                   </div>
                   <div className="card-btn">查看详情</div>
@@ -1486,7 +790,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* AI交流群弹窗（优化居中+大小+不再提示） */}
+      {/* AI交流群邀请弹窗 */}
       {showInviteModal && (
         <div className="invite-modal-overlay">
           <div className="invite-modal">
@@ -1499,12 +803,6 @@ export default function Home() {
               <p>AI时代已经来临，它不再是“懂不懂都行”的加分项，而是像开车、用手机一样，未来人人必备的生存技能。<br/>别人已经用AI提效、搞副业、抢机会，观望的你，只会被信息差越拉越远。</p>
               <p>我们的免费交流群，为你提供：<br/>✅ 实用AI工具分享与使用技巧<br/>✅ 新手入门教程与避坑指南<br/>✅ 同频伙伴交流、互相答疑</p>
               <p style={{marginTop:"15px", fontWeight:"bold"}}>早学会，早受益。<br/>邀请你一起，跟上AI时代的脚步！</p>
-            </div>
-
-            {/* 新增：不再提示勾选框 */}
-            <div className="prompt-checkbox">
-              <input type="checkbox" id="noPrompt" checked={noPrompt} onChange={() => setNoPrompt(!noPrompt)} />
-              <label htmlFor="noPrompt">不再提示此弹窗</label>
             </div>
 
             <div className="invite-modal-buttons">
@@ -1540,7 +838,6 @@ export default function Home() {
         }
         .title p{font-size:18px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.5)}
 
-        /* 滚动公告栏 */
         .notice-bar{
           background:#fff !important;
           border-radius:12px;
@@ -1613,7 +910,6 @@ export default function Home() {
           background:#4f46e5;color:#fff;
           text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:bold;
         }
-        /* 普通弹窗 */
         .modal{
           position:fixed;top:0;left:0;width:100%;height:100%;
           background:rgba(0,0,0,0.7);z-index:999;
@@ -1645,7 +941,6 @@ export default function Home() {
           color:#fff;text-align:center;padding:15px;border-radius:12px;
           text-decoration:none;font-weight:bold;font-size:16px;
         }
-        /* ========== 优化后AI弹窗样式：居中+合适大小 ========== */
         .invite-modal-overlay{
           position:fixed;top:0;left:0;width:100%;height:100%;
           background:rgba(0,0,0,0.8);z-index:1000;
@@ -1655,13 +950,11 @@ export default function Home() {
         .invite-modal{
           background:linear-gradient(135deg,#e0f2fe,#bfdbfe);
           border-radius:20px;
+          max-width:420px;
           width:100%;
-          max-width:420px; /* 合适宽度 */
-          max-height:85vh; /* 合适高度 */
           padding:25px;
           text-align:center;
           box-shadow:0 10px 40px rgba(0,0,0,0.3);
-          overflow-y:auto;
         }
         .invite-modal-title{
           font-size:20px;color:#1e40af;margin-bottom:18px;
@@ -1671,20 +964,6 @@ export default function Home() {
           color:#1e3a8a;line-height:1.7;
           font-size:14px;
           margin-bottom:20px;
-        }
-        /* 不再提示勾选框 */
-        .prompt-checkbox{
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          gap:8px;
-          margin-bottom:20px;
-          color:#1e3a8a;
-          font-size:14px;
-        }
-        .prompt-checkbox input{
-          width:16px;height:16px;
-          cursor:pointer;
         }
         .invite-modal-buttons{
           display:flex;flex-direction:column;gap:10px;
