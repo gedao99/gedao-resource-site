@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 export default function Home() {
   const [currentKeyword, setCurrentKeyword] = useState('');
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [showMoreModal, setShowMoreModal] = useState({ type: null, show: false });
-  const [showInviteModal, setShowInviteModal] = useState(false);
+// 给 selectedItem 加 any 类型（适配资源对象）
+const [selectedItem, setSelectedItem] = useState<any>(null);
+// 给 showMoreModal 加类型注解，明确 type 可以是字符串或 null
+const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
+const [showInviteModal, setShowInviteModal] = useState(false);
 
   // 页面加载判断弹窗逻辑
   useEffect(() => {
