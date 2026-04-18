@@ -281,7 +281,7 @@ export default function Home() {
     },
     {
       title: "AI真人短剧训练营",
-      type: "ai",
+      type: "副业",
       time: "2026-04-19",
       linkUrl: "https://pan.baidu.com/s/1fBt69UXFJycWB2H0MKQUgg?pwd=uyhp",
       desc: "21天AI真人短剧全流程实战，从剧本→分镜→生成→剪辑，小白也能做出电影感短剧！",
@@ -289,7 +289,7 @@ export default function Home() {
     },
     {
       title: "Ai漫剧制作全流程",
-      type: "ai",
+      type: "副业",
       time: "2026-04-19",
       linkUrl: "https://pan.quark.cn/s/f6ddc7055054",
       desc: "AI漫剧制作全流程实战教学，零基础快速成片，高效批量产出高质量漫剧内容！",
