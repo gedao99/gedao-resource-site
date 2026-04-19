@@ -40,13 +40,21 @@ export default function Home() {
   // 资源列表（已包含你所有新增资源）
   const initialResources = [
     {
-      title: "【置顶】爱影视(爱电影) 永久可用",
+      title: "爱影视(爱电影) 永久可用",
       type: "app",
       time: "2026-04-15",
       linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
       desc: "已优化最新版本，无广告",
-      top: true,
+      top:false ,
     },
+    {
+  title: "自用精品合集app推荐包含影视音乐小说美图剪映等！！",
+  type: "app",
+  time: "2026-04-20",
+  linkUrl: "https://pan.quark.cn/s/ada790ce4ed4",
+  desc: "站长自己都在用的软件，墙裂推荐给各位小伙伴们，这些资源都是大厂旗下的，会经常更新最新版本，更新信息记得持续关注公众号【格道黑科技】",
+  top: true,
+},
     {
   title: "23影视4K",
   type: "app",
