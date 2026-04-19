@@ -48,7 +48,7 @@ export default function Home() {
       top:false ,
     },
     {
-  title: "自用精品合集app推荐包含影视音乐小说美图剪映等！！",
+  title: "自用精品合集app推荐：包含影视音乐小说美图剪映等！！",
   type: "app",
   time: "2026-04-20",
   linkUrl: "https://pan.quark.cn/s/ada790ce4ed4",
