@@ -392,7 +392,7 @@ export default function Home() {
         {/* 滚动公告栏 */}
         <div className="notice-bar">
           <div className="notice-content">
-            本站资源完全免费分享，如果你也觉得还不错，请帮我转发给有需要的朋友；资源每日更新明细请关注公众号【格道黑科技】。
+            本站资源完全免费分享，如果你觉得不错，不妨转发给身边的朋友；资源每日更新明细请关注公众号【格道黑科技】。
           </div>
         </div>
 
