@@ -349,7 +349,7 @@ export default function Home() {
       time: "2026-04-19",
       linkUrl: "https://pan.quark.cn/s/f6ddc7055054",
       desc: "AI漫剧制作全流程实战教学，零基础快速成片，高效批量产出高质量漫剧内容！",
-      top: false,
+      top: true,
     },
   ];
 
