@@ -911,7 +911,7 @@ export default function Home() {
   const finalSide = searchList(sideList);
 
   const typeMap = {
-    app: { name: "📱 软件工具" },
+    app: { name: "📱 破解版app" },
     ai: { name: "🤖 AI教程" },
     side: { name: "💰 副业项目" },
   };
@@ -930,7 +930,7 @@ export default function Home() {
       <div className="container">
         <div className="title">
           <h1>格道资源站</h1>
-          <p>精品软件 | AI教程 | 副业项目</p>
+          <p>破解版app | AI教程 | 副业项目</p>
         </div>
         
         {/* 滚动公告栏 */}
@@ -954,7 +954,7 @@ export default function Home() {
           {/* 软件 */}
           <div className="col">
             <div className="col-header">
-              <h2 className="col-title">📱 破解软件</h2>
+              <h2 className="col-title">📱 破解版app</h2>
               <button className="more-btn" onClick={() => setShowMoreModal({ type: 'app', show: true })}>查看更多 →</button>
             </div>
             <div className="list">
