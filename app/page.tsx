@@ -234,7 +234,7 @@ export default function Home() {
       <div className="container">
         <div className="title">
           <h1>格道资源站</h1>
-          <p>最新资源丨破解版app丨AI教程丨副业项目</p>
+          <p>破解版app丨AI教程丨副业项目</p>
         </div>
         
         {/* 滚动公告轮播 完全保留 */}
