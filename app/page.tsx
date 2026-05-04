@@ -6,18 +6,15 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
   const [showInviteModal, setShowInviteModal] = useState(false);
-  // 当前激活的标签，默认显示最新资源
   const [activeTab, setActiveTab] = useState('all');
 
   // 页面加载判断弹窗逻辑
   useEffect(() => {
-    // 1. 如果已经加入群，永久不弹
     const hasJoined = localStorage.getItem('userJoinedAIGroup');
     if (hasJoined) {
       setShowInviteModal(false);
       return;
     }
-    // 2. 没加群，判断今天是否点了下次再说
     const today = new Date().toLocaleDateString();
     const closedDate = localStorage.getItem('popupClosedDate');
     if (closedDate !== today) {
@@ -25,21 +22,19 @@ export default function Home() {
     }
   }, []);
 
-  // 同意加入群：永久不再弹出
   const handleJoinGroup = () => {
     localStorage.setItem('userJoinedAIGroup', 'true');
     window.open("https://qm.qq.com/q/KPkPCBv6MK", "_blank");
     setShowInviteModal(false);
   };
 
-  // 下次再说：今日不弹，次日再弹
   const handleSkip = () => {
     const today = new Date().toLocaleDateString();
     localStorage.setItem('popupClosedDate', today);
     setShowInviteModal(false);
   };
 
-  // 资源列表
+  // 资源列表（已包含你所有资源）
   const initialResources = [
     {
       title: "自用精品合集app推荐：包含影视音乐小说美图剪映等！！",
@@ -158,7 +153,6 @@ export default function Home() {
       return itemDate >= threeDaysAgo || item.top;
     });
     
-    // 去重（防止置顶资源同时也是最近3天资源重复显示）
     const uniqueMap = new Map();
     recentList.forEach(item => {
       if (!uniqueMap.has(item.title)) {
@@ -198,10 +192,10 @@ export default function Home() {
   const finalList = searchList(getCurrentList());
 
   const typeMap = {
-    all: { name: "🔥 最新资源" },
-    app: { name: "📱 破解版app" },
-    ai: { name: "🤖 AI教程" },
-    side: { name: "💰 副业项目" },
+    all: { name: "🔥 最新资源", icon: "🔥", color: "#ff6b6b" },
+    app: { name: "📱 破解版app", icon: "📱", color: "#3b82f6" },
+    ai: { name: "🤖 AI教程", icon: "🤖", color: "#8b5cf6" },
+    side: { name: "💰 副业项目", icon: "💰", color: "#10b981" },
   };
 
   const getMoreResources = (type: string) => {
@@ -214,20 +208,38 @@ export default function Home() {
     }
   };
 
-  // 渲染资源卡片网格
+  // 获取资源对应的图标和背景色
+  const getResourceStyle = (type: string) => {
+    switch (type) {
+      case 'app': return { icon: "📱", bg: "rgba(59, 130, 246, 0.15)" };
+      case 'ai': return { icon: "🤖", bg: "rgba(139, 92, 246, 0.15)" };
+      case 'side': return { icon: "💰", bg: "rgba(16, 185, 129, 0.15)" };
+      default: return { icon: "📦", bg: "rgba(107, 114, 128, 0.15)" };
+    }
+  };
+
+  // 渲染闪链同款图标卡片网格
   const renderResourceGrid = (list: any[]) => (
     <div className="resource-grid">
-      {list.map((item, index) => (
-        <div key={index} className={`card ${item.top ? 'card-top' : ''}`} onClick={() => setSelectedItem(item)}>
-          {item.top && <div className="top-tag">置顶</div>}
-          <div className="card-title">{item.title}</div>
-          <div className="card-info">
-            <span className={`tag tag-${item.type}`}>{typeMap[item.type as keyof typeof typeMap]?.name || typeMap.all.name}</span>
-            <span>{item.time}</span>
+      {list.map((item, index) => {
+        const style = getResourceStyle(item.type);
+        return (
+          <div 
+            key={index} 
+            className={`icon-card ${item.top ? 'card-top' : ''}`} 
+            onClick={() => setSelectedItem(item)}
+          >
+            {item.top && <div className="top-badge">置顶</div>}
+            <div className="card-icon" style={{ background: style.bg }}>
+              <span className="icon-text">{style.icon}</span>
+            </div>
+            <div className="card-name">{item.title}</div>
+            <div className="card-meta">
+              <span className="meta-time">{item.time}</span>
+            </div>
           </div>
-          <div className="card-btn">查看详情</div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 
@@ -255,7 +267,7 @@ export default function Home() {
           />
         </div>
 
-        {/* 标签切换栏 - 修复手机端自适应 */}
+        {/* 标签切换栏 */}
         <div className="tabs-container">
           <div className="tabs-wrapper">
             <div className="tabs">
@@ -296,7 +308,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* 资源展示区域（根据标签动态切换） */}
+        {/* 资源展示区域 */}
         <div className="section">
           {renderResourceGrid(finalList)}
         </div>
@@ -352,7 +364,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* 全局样式 - 彻底修复手机端自适应 */}
+      {/* 全局样式 - 闪链同款毛玻璃卡片 */}
       <style jsx global>{`
         *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
         html,body{
@@ -378,7 +390,8 @@ export default function Home() {
         .title p{font-size:18px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.5)}
 
         .notice-bar{
-          background:#fff !important;
+          background:rgba(255,255,255,0.85) !important;
+          backdrop-filter: blur(10px);
           border-radius:12px;
           padding:12px 0;
           margin-bottom:25px;
@@ -402,19 +415,22 @@ export default function Home() {
         .search input{
           width:90%;max-width:500px;padding:14px 20px;
           border-radius:30px;border:none;outline:none;
-          background:rgba(255,255,255,0.95);
+          background:rgba(255,255,255,0.9);
+          backdrop-filter: blur(10px);
+          font-size:16px;
         }
 
-        /* 标签栏核心修复 - 手机端横向滚动自适应 */
+        /* 标签栏样式 */
         .tabs-container{
           display:flex;
           justify-content:space-between;
           align-items:center;
-          background:#ffffff !important;
+          background:rgba(255,255,255,0.85) !important;
+          backdrop-filter: blur(10px);
           border-radius:16px 16px 0 0;
           padding:18px 22px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
-          border-bottom:1px solid #eee;
+          border-bottom:1px solid rgba(255,255,255,0.2);
           gap:15px;
         }
         .tabs-wrapper{
@@ -447,11 +463,11 @@ export default function Home() {
         }
         .tab-btn:hover{
           color:#4f46e5;
-          background:#f0f4ff;
+          background:rgba(79, 70, 229, 0.1);
         }
         .tab-active{
           color:#4f46e5 !important;
-          background:#eef2ff !important;
+          background:rgba(79, 70, 229, 0.15) !important;
         }
         .tab-divider{
           color:#ccc;
@@ -467,72 +483,88 @@ export default function Home() {
         .more-btn:hover{text-decoration:underline;}
 
         .section{
-          background:#ffffff !important;
+          background:rgba(255,255,255,0.75) !important;
+          backdrop-filter: blur(15px);
           border-radius:0 0 16px 16px;
           padding:22px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
           margin-bottom:35px;
         }
 
-        /* 网格布局：电脑端4个，平板3个，手机端2个 */
+        /* 核心：闪链同款图标卡片网格 */
         .resource-grid{
           display:grid;
-          grid-template-columns:repeat(4, 1fr);
+          grid-template-columns:repeat(8, 1fr);
           gap:15px;
         }
-        @media(max-width:1200px){.resource-grid{grid-template-columns:repeat(3, 1fr)}}
-        @media(max-width:900px){.resource-grid{grid-template-columns:repeat(2, 1fr)}}
-        @media(max-width:600px){
-          .resource-grid{grid-template-columns:repeat(2, 1fr);gap:12px;}
-          .title h1{font-size:32px;}
-          .title p{font-size:16px;}
-          .all{padding:20px 12px;}
-          .tabs-container{
-            padding:15px 12px;
-            gap:10px;
-          }
-          .tab-btn{
-            font-size:16px;
-            padding:6px 10px;
-          }
-          .tab-divider{
-            font-size:16px;
-          }
-          .section{
-            padding:15px 12px;
-          }
-        }
+        @media(max-width:1400px){.resource-grid{grid-template-columns:repeat(6, 1fr)}}
+        @media(max-width:1000px){.resource-grid{grid-template-columns:repeat(5, 1fr)}}
+        @media(max-width:768px){.resource-grid{grid-template-columns:repeat(4, 1fr);gap:12px;}}
+        @media(max-width:480px){.resource-grid{grid-template-columns:repeat(4, 1fr);gap:10px;}}
 
-        .card{
-          background:#f9fafb;
-          border-radius:12px;padding:16px;
+        .icon-card{
+          background:rgba(255,255,255,0.6);
+          backdrop-filter: blur(8px);
+          border-radius:12px;
+          padding:15px 10px;
           cursor:pointer;
           position:relative;
           display:flex;
           flex-direction:column;
-          height:100%;
+          align-items:center;
+          text-align:center;
+          transition:all 0.2s ease;
+          border:1px solid rgba(255,255,255,0.3);
+        }
+        .icon-card:hover{
+          transform:translateY(-3px);
+          box-shadow:0 8px 20px rgba(0,0,0,0.15);
+          background:rgba(255,255,255,0.8);
         }
         .card-top{
           border:2px solid #ff6b6b !important;
-          background:#fff5f5 !important;
+          background:rgba(255, 107, 107, 0.1) !important;
         }
-        .top-tag{
-          position:absolute;top:8px;right:8px;
-          background:#ff6b6b;color:#fff;
-          font-size:12px;padding:2px 6px;border-radius:4px;
+        .top-badge{
+          position:absolute;
+          top:-8px;
+          right:-8px;
+          background:#ff6b6b;
+          color:#fff;
+          font-size:11px;
+          padding:2px 6px;
+          border-radius:10px;
+          font-weight:bold;
         }
-        .card-title{font-weight:bold;margin-bottom:8px;flex:1}
-        .card-info{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#666;margin-bottom:10px;flex-wrap:wrap;gap:5px;}
-        
-        .tag{padding:4px 10px;border-radius:8px;color:#fff;font-size:12px;font-weight:bold}
-        .tag-app{background:#3b82f6}
-        .tag-ai{background:#8b5cf6}
-        .tag-side{background:#10b981}
-        
-        .card-btn{
-          background:#4f46e5;color:#fff;
-          text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:bold;
+        .card-icon{
+          width:50px;
+          height:50px;
+          border-radius:12px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          margin-bottom:10px;
         }
+        .icon-text{
+          font-size:28px;
+        }
+        .card-name{
+          font-size:13px;
+          font-weight:500;
+          color:#222;
+          line-height:1.4;
+          height:36px;
+          overflow:hidden;
+          display:-webkit-box;
+          -webkit-line-clamp:2;
+          -webkit-box-orient:vertical;
+          margin-bottom:5px;
+        }
+        .card-meta{
+          font-size:11px;
+          color:#666;
+        }
+
         .modal{
           position:fixed;top:0;left:0;width:100%;height:100%;
           background:rgba(0,0,0,0.7);z-index:999;
