@@ -136,7 +136,7 @@ export default function Home() {
     },
   ];
 
-  // 分类专属图标（仅用于资源列表，导航已去掉）
+  // 分类专属图标
   const getTypeIcon = (type: string) => {
     const iconMap: Record<string, string> = {
       video: "🎬 影视软件",
@@ -252,7 +252,7 @@ export default function Home() {
           />
         </div>
 
-        {/* 导航栏：已去掉所有图标，调紧凑间距 */}
+        {/* 导航栏：已移除右侧的查看更多按钮 */}
         <div className="tabs-container">
           <div className="tabs-wrapper">
             <div className="tabs">
@@ -285,17 +285,23 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <button 
-            className="more-btn" 
-            onClick={() => setShowMoreModal({ type: activeTab, show: true })}
-          >
-            查看更多 →
-          </button>
         </div>
 
         {/* 资源区域 */}
         <div className="section">
           {renderResourceList(finalList)}
+          
+          {/* 查看更多按钮：仅在最新资源标签下显示，放在列表底部 */}
+          {activeTab === 'all' && (
+            <div className="more-btn-container">
+              <button 
+                className="more-btn" 
+                onClick={() => setShowMoreModal({ type: 'all', show: true })}
+              >
+                查看更多 →
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -398,17 +404,16 @@ export default function Home() {
           background:rgba(255,255,255,0.95);
         }
 
-        /* 导航栏：已调紧凑，去掉图标 */
+        /* 导航栏：已移除右侧查看更多 */
         .tabs-container{
           display:flex;
-          justify-content:space-between;
+          justify-content:flex-start;
           align-items:center;
           background:#ffffff !important;
           border-radius:16px 16px 0 0;
           padding:15px 20px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
           border-bottom:1px solid #eee;
-          gap:10px;
         }
         .tabs-wrapper{
           width:100%;
@@ -433,8 +438,6 @@ export default function Home() {
         .tab-btn:hover{color:#4f46e5;background:#f0f4ff;}
         .tab-active{color:#4f46e5 !important;background:#eef2ff !important;}
         .tab-divider{color:#ccc;font-size:17px;flex-shrink:0;}
-        .more-btn{font-size:14px;color:#4f46e5;font-weight:bold;background:none;border:none;cursor:pointer;white-space:nowrap;}
-        .more-btn:hover{text-decoration:underline;}
 
         .section{
           background:#ffffff !important;
@@ -443,6 +446,19 @@ export default function Home() {
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
           margin-bottom:35px;
         }
+
+        /* 查看更多按钮容器：居中显示在列表底部 */
+        .more-btn-container{
+          text-align:center;
+          margin-top:20px;
+          padding-top:10px;
+          border-top:1px solid #eee;
+        }
+        .more-btn{
+          font-size:15px;color:#4f46e5;font-weight:bold;
+          background:none;border:none;cursor:pointer;
+        }
+        .more-btn:hover{text-decoration:underline;}
 
         /* 资源列表样式 */
         .resource-list{display:flex;flex-direction:column;gap:14px;}
