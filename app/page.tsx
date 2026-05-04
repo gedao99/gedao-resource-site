@@ -40,14 +40,6 @@ export default function Home() {
   // 资源列表（已包含你所有新增资源）
   const initialResources = [
     {
-      title: "爱影视(爱电影) 永久可用",
-      type: "app",
-      time: "2026-04-15",
-      linkUrl: "https://pan.quark.cn/s/22a54c2c672b",
-      desc: "已优化最新版本，无广告",
-      top:false ,
-    },
-    {
   title: "顾我追剧",
   type: "app",
   time: "2026-05-03",
@@ -740,14 +732,6 @@ export default function Home() {
   type: "app",
   time: "2026-04-20",
   linkUrl: "https://pan.quark.cn/s/9f0e255e9944",
-  desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
-  top: false,
-},
-{
-  title: "喵趣(原轻漫岛)",
-  type: "app",
-  time: "2026-04-20",
-  linkUrl: "https://pan.quark.cn/s/67e3d98979d2",
   desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
   top: false,
 },
