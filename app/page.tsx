@@ -6,6 +6,8 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
   const [showInviteModal, setShowInviteModal] = useState(false);
+  // 新增：当前激活的标签，默认显示最新资源
+  const [activeTab, setActiveTab] = useState('all');
 
   // 页面加载判断弹窗逻辑
   useEffect(() => {
@@ -168,16 +170,24 @@ export default function Home() {
   // 首页显示的资源：置顶 + 最近3天
   const homeList = getRecentAndTopResources(initialResources);
 
-  // 搜索过滤
+  // 根据当前激活的标签获取对应的资源列表
+  const getCurrentList = () => {
+    switch (activeTab) {
+      case 'all': return homeList;
+      case 'app': return appList;
+      case 'ai': return aiList;
+      case 'side': return sideList;
+      default: return homeList;
+    }
+  };
+
+  // 搜索过滤（只在当前激活的标签下搜索）
   const searchList = (list: any[]) => {
     if (!currentKeyword) return list;
     return list.filter(item => item.title.toLowerCase().includes(currentKeyword.toLowerCase()));
   };
 
-  const finalHome = searchList(homeList);
-  const finalApp = searchList(appList);
-  const finalAi = searchList(aiList);
-  const finalSide = searchList(sideList);
+  const finalList = searchList(getCurrentList());
 
   const typeMap = {
     all: { name: "🔥 最新资源" },
@@ -237,43 +247,48 @@ export default function Home() {
           />
         </div>
 
-        {/* 四个分类区域 */}
-        <div className="sections">
-          {/* 1. 最新资源 */}
-          <div className="section">
-            <div className="section-header">
-              <h2 className="section-title">🔥 最新资源</h2>
-              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'all', show: true })}>查看更多 →</button>
-            </div>
-            {renderResourceGrid(finalHome)}
+        {/* 标签切换栏 */}
+        <div className="tabs-container">
+          <div className="tabs">
+            <button 
+              className={`tab-btn ${activeTab === 'all' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('all')}
+            >
+              🔥 最新资源
+            </button>
+            <span className="tab-divider">丨</span>
+            <button 
+              className={`tab-btn ${activeTab === 'app' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('app')}
+            >
+              📱 破解版app
+            </button>
+            <span className="tab-divider">丨</span>
+            <button 
+              className={`tab-btn ${activeTab === 'ai' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('ai')}
+            >
+              🤖 AI教程
+            </button>
+            <span className="tab-divider">丨</span>
+            <button 
+              className={`tab-btn ${activeTab === 'side' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('side')}
+            >
+              💰 副业项目
+            </button>
           </div>
+          <button 
+            className="more-btn" 
+            onClick={() => setShowMoreModal({ type: activeTab, show: true })}
+          >
+            查看更多 →
+          </button>
+        </div>
 
-          {/* 2. 破解版app */}
-          <div className="section">
-            <div className="section-header">
-              <h2 className="section-title">📱 破解版app</h2>
-              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'app', show: true })}>查看更多 →</button>
-            </div>
-            {renderResourceGrid(finalApp.slice(0, 4))}
-          </div>
-
-          {/* 3. AI教程 */}
-          <div className="section">
-            <div className="section-header">
-              <h2 className="section-title">🤖 AI教程</h2>
-              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'ai', show: true })}>查看更多 →</button>
-            </div>
-            {renderResourceGrid(finalAi.slice(0, 4))}
-          </div>
-
-          {/* 4. 副业项目 */}
-          <div className="section">
-            <div className="section-header">
-              <h2 className="section-title">💰 副业项目</h2>
-              <button className="more-btn" onClick={() => setShowMoreModal({ type: 'side', show: true })}>查看更多 →</button>
-            </div>
-            {renderResourceGrid(finalSide.slice(0, 4))}
-          </div>
+        {/* 资源展示区域（根据标签动态切换） */}
+        <div className="section">
+          {renderResourceGrid(finalList)}
         </div>
       </div>
 
@@ -380,24 +395,58 @@ export default function Home() {
           background:rgba(255,255,255,0.95);
         }
 
-        .sections{display:flex;flex-direction:column;gap:35px}
-        .section{
+        /* 标签栏样式 */
+        .tabs-container{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
           background:#ffffff !important;
-          border-radius:16px;padding:22px;
+          border-radius:16px 16px 0 0;
+          padding:18px 22px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
+          border-bottom:1px solid #eee;
         }
-        .section-header{
-          display:flex;justify-content:space-between;align-items:center;
-          margin-bottom:20px;
+        .tabs{
+          display:flex;
+          align-items:center;
+          gap:10px;
         }
-        .section-title{
-          font-size:20px;font-weight:bold;color:#222;
+        .tab-btn{
+          background:none;
+          border:none;
+          font-size:18px;
+          font-weight:bold;
+          color:#666;
+          cursor:pointer;
+          padding:8px 12px;
+          border-radius:8px;
+          transition:all 0.2s ease;
+        }
+        .tab-btn:hover{
+          color:#4f46e5;
+          background:#f0f4ff;
+        }
+        .tab-active{
+          color:#4f46e5 !important;
+          background:#eef2ff !important;
+        }
+        .tab-divider{
+          color:#ccc;
+          font-size:18px;
         }
         .more-btn{
           font-size:14px;color:#4f46e5;font-weight:bold;
           background:none;border:none;cursor:pointer;
         }
         .more-btn:hover{text-decoration:underline;}
+
+        .section{
+          background:#ffffff !important;
+          border-radius:0 0 16px 16px;
+          padding:22px;
+          box-shadow:0 4px 15px rgba(0,0,0,0.1);
+          margin-bottom:35px;
+        }
 
         /* 核心网格布局：电脑端4个，手机端2个 */
         .resource-grid{
@@ -407,7 +456,25 @@ export default function Home() {
         }
         @media(max-width:1200px){.resource-grid{grid-template-columns:repeat(3, 1fr)}}
         @media(max-width:900px){.resource-grid{grid-template-columns:repeat(2, 1fr)}}
-        @media(max-width:600px){.resource-grid{grid-template-columns:repeat(2, 1fr)}}
+        @media(max-width:600px){
+          .resource-grid{grid-template-columns:repeat(2, 1fr)}
+          .tabs-container{
+            flex-direction:column;
+            gap:15px;
+            align-items:flex-start;
+          }
+          .tabs{
+            flex-wrap:wrap;
+            gap:5px;
+          }
+          .tab-btn{
+            font-size:16px;
+            padding:6px 10px;
+          }
+          .tab-divider{
+            display:none;
+          }
+        }
 
         .card{
           background:#f9fafb;
