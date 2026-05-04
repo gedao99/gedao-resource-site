@@ -1070,7 +1070,7 @@ export default function Home() {
       type: "music",
       originType: "app",
       time: "2026-04-19",
-      linkUrl: "https://pan.quark.cn/s/6c13ed9ceed9",
+      linkUrl: "https://pan.quark.cn/s/624bc7b00fa9",
       desc: "已优化最新版本；关注公众号【格道黑科技】，及时获取每日更新信息！",
       top: false,
     },
