@@ -136,7 +136,7 @@ export default function Home() {
     },
   ];
 
-  // 分类专属图标
+  // 分类专属图标（仅用于资源列表，导航已去掉）
   const getTypeIcon = (type: string) => {
     const iconMap: Record<string, string> = {
       video: "🎬 影视软件",
@@ -195,10 +195,10 @@ export default function Home() {
   const finalList = searchList(getCurrentList());
 
   const typeMap = {
-    all: { name: "🔥 最新资源" },
-    app: { name: "📱 破解版app" },
-    ai: { name: "🤖 AI教程" },
-    side: { name: "💰 副业项目" },
+    all: { name: "最新资源" },
+    app: { name: "破解版app" },
+    ai: { name: "AI教程" },
+    side: { name: "副业项目" },
   };
 
   const getMoreResources = (type: string) => {
@@ -211,12 +211,11 @@ export default function Home() {
     }
   };
 
-  // 【长条单列列表 + 右上角置顶】
+  // 长条单列列表 + 右上角置顶
   const renderResourceList = (list: any[]) => (
     <div className="resource-list">
       {list.map((item, index) => (
         <div key={index} className="list-row" onClick={() => setSelectedItem(item)}>
-          {/* 置顶 - 固定右上角 */}
           {item.top && <span className="row-top-badge">置顶</span>}
           <div className="row-icon">{getTypeIcon(item.type)}</div>
           <div className="row-main">
@@ -238,7 +237,7 @@ export default function Home() {
           <p>最新资源丨破解版app丨AI教程丨副业项目</p>
         </div>
         
-        {/* 完全保留你原来 滚动公告轮播 不动 */}
+        {/* 滚动公告轮播 完全保留 */}
         <div className="notice-bar">
           <div className="notice-content">
             本站资源完全免费分享，如果你觉得不错，不妨转发给身边的朋友；资源每日更新明细请关注公众号【格道黑科技】。
@@ -253,6 +252,7 @@ export default function Home() {
           />
         </div>
 
+        {/* 导航栏：已去掉所有图标，调紧凑间距 */}
         <div className="tabs-container">
           <div className="tabs-wrapper">
             <div className="tabs">
@@ -260,28 +260,28 @@ export default function Home() {
                 className={`tab-btn ${activeTab === 'all' ? 'tab-active' : ''}`}
                 onClick={() => setActiveTab('all')}
               >
-                🔥 最新资源
+                最新资源
               </button>
               <span className="tab-divider">丨</span>
               <button 
                 className={`tab-btn ${activeTab === 'app' ? 'tab-active' : ''}`}
                 onClick={() => setActiveTab('app')}
               >
-                📱 破解版app
+                破解版app
               </button>
               <span className="tab-divider">丨</span>
               <button 
                 className={`tab-btn ${activeTab === 'ai' ? 'tab-active' : ''}`}
                 onClick={() => setActiveTab('ai')}
               >
-                🤖 AI教程
+                AI教程
               </button>
               <span className="tab-divider">丨</span>
               <button 
                 className={`tab-btn ${activeTab === 'side' ? 'tab-active' : ''}`}
                 onClick={() => setActiveTab('side')}
               >
-                💰 副业项目
+                副业项目
               </button>
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* 资源区域：改为长条单列列表 */}
+        {/* 资源区域 */}
         <div className="section">
           {renderResourceList(finalList)}
         </div>
@@ -347,7 +347,6 @@ export default function Home() {
       )}
 
       <style jsx global>{`
-        /* 【完全还原你原本背景+全局样式 一点不改】 */
         *{margin:0;padding:0;box-sizing:border-box;font-family:Microsoft Yahei}
         html,body{
           background:url('https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_gen_image/cd457466542c42bab2095994e3f29e02.jpeg~tplv-a9rns2rl98-image_dld_watermark_1_6b.png?lk3s=8e244e95&rcl=20260415045342E70F294401205B79CB5A&rrcfp=e875b5a5&x-expires=2091560024&x-signature=W1W6iw%2Balw6D%2F1rhf306nPtxvC0%3D') !important;
@@ -371,7 +370,6 @@ export default function Home() {
         }
         .title p{font-size:18px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.5)}
 
-        /* 【滚动公告轮播 完全原样保留】 */
         .notice-bar{
           background:#fff !important;
           border-radius:12px;
@@ -400,16 +398,17 @@ export default function Home() {
           background:rgba(255,255,255,0.95);
         }
 
+        /* 导航栏：已调紧凑，去掉图标 */
         .tabs-container{
           display:flex;
           justify-content:space-between;
           align-items:center;
           background:#ffffff !important;
           border-radius:16px 16px 0 0;
-          padding:18px 22px;
+          padding:15px 20px;
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
           border-bottom:1px solid #eee;
-          gap:15px;
+          gap:10px;
         }
         .tabs-wrapper{
           width:100%;
@@ -421,19 +420,19 @@ export default function Home() {
         .tabs{
           display:flex;
           align-items:center;
-          gap:10px;
+          gap:6px;
           white-space:nowrap;
           min-width:max-content;
         }
         .tab-btn{
           background:none;border:none;
-          font-size:18px;font-weight:bold;color:#666;
-          cursor:pointer;padding:8px 12px;border-radius:8px;
+          font-size:17px;font-weight:bold;color:#666;
+          cursor:pointer;padding:6px 10px;border-radius:8px;
           transition:all 0.2s ease;flex-shrink:0;
         }
         .tab-btn:hover{color:#4f46e5;background:#f0f4ff;}
         .tab-active{color:#4f46e5 !important;background:#eef2ff !important;}
-        .tab-divider{color:#ccc;font-size:18px;flex-shrink:0;}
+        .tab-divider{color:#ccc;font-size:17px;flex-shrink:0;}
         .more-btn{font-size:14px;color:#4f46e5;font-weight:bold;background:none;border:none;cursor:pointer;white-space:nowrap;}
         .more-btn:hover{text-decoration:underline;}
 
@@ -445,7 +444,7 @@ export default function Home() {
           margin-bottom:35px;
         }
 
-        /* ========== 全新：长条单列列表样式 ========== */
+        /* 资源列表样式 */
         .resource-list{display:flex;flex-direction:column;gap:14px;}
         .list-row{
           position:relative;
@@ -462,7 +461,6 @@ export default function Home() {
         }
         .list-row:hover{background:#f0f4ff;}
 
-        /* 置顶角标 —— 纯右上角 */
         .row-top-badge{
           position:absolute;
           top:12px;
@@ -485,7 +483,7 @@ export default function Home() {
           border-radius:8px;font-size:13px;
         }
 
-        /* 手机自适应 自动竖向排列 */
+        /* 手机自适应 */
         @media (max-width:768px){
           .list-row{
             grid-template-columns:1fr;
@@ -493,9 +491,11 @@ export default function Home() {
             padding:16px 14px;
           }
           .row-time{text-align:left;}
+          .tab-btn{font-size:16px;padding:5px 8px;}
+          .tab-divider{font-size:16px;}
         }
 
-        /* 下方弹窗、按钮全部保留你原来样式不变 */
+        /* 弹窗样式 完全保留 */
         .modal{
           position:fixed;top:0;left:0;width:100%;height:100%;
           background:rgba(0,0,0,0.7);z-index:999;
