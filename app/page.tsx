@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
   const [currentKeyword, setCurrentKeyword] = useState('');
@@ -7,6 +7,19 @@ export default function Home() {
   const [showMoreModal, setShowMoreModal] = useState<{ type: string | null; show: boolean }>({ type: null, show: false });
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
+  
+  // 新增：导航栏滑动引用
+  const tabScrollRef = useRef<HTMLDivElement>(null);
+
+  // 点击箭头 → 自动向右滑动导航
+  const handleSlideRight = () => {
+    if (tabScrollRef.current) {
+      tabScrollRef.current.scrollBy({
+        left: 220, // 滑动距离（刚好切到下一个导航）
+        behavior: 'smooth' // 丝滑滑动
+      });
+    }
+  };
 
   useEffect(() => {
     const hasJoined = localStorage.getItem('userJoinedAIGroup');
@@ -169,7 +182,7 @@ export default function Home() {
   const homeList = getRecentAndTopResources(initialResources);
 
   const getCurrentList = () => {
-    // 修复问题1：搜索时展示全部资源，不限制标签
+    // 修复：搜索时展示全部资源
     if (currentKeyword.trim()) {
       return allResources;
     }
@@ -226,7 +239,6 @@ export default function Home() {
 
   return (
     <div className="all">
-      {/* 修复问题2：添加viewport禁止手机点击输入框放大 */}
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
@@ -236,7 +248,7 @@ export default function Home() {
           <p>破解版app丨AI教程丨副业项目</p>
         </div>
         
-        {/* 滚动公告轮播 完全保留 */}
+        {/* 滚动公告轮播 */}
         <div className="notice-bar">
           <div className="notice-content">
             本站资源完全免费分享，如果你觉得不错，不妨转发给身边的朋友；资源每日更新明细请关注公众号【格道黑科技】。
@@ -251,11 +263,11 @@ export default function Home() {
           />
         </div>
 
-        {/* 导航栏：查看更多放在最新资源正下方 + 修复问题3：添加右滑提示箭头 */}
+        {/* 导航栏：箭头可点击滑动 */}
         <div className="tabs-container">
-          <div className="tabs-wrapper">
+          {/* 绑定滚动ref */}
+          <div className="tabs-wrapper" ref={tabScrollRef}>
             <div className="tabs">
-              {/* 最新资源按钮 + 下方的查看更多 */}
               <div className="tab-item-wrapper">
                 <button 
                   className={`tab-btn ${activeTab === 'all' ? 'tab-active' : ''}`}
@@ -263,7 +275,6 @@ export default function Home() {
                 >
                   最新资源
                 </button>
-                {/* 仅在选中最新资源时，在其正下方显示查看更多 */}
                 {activeTab === 'all' && (
                   <button 
                     className="tab-more-btn" 
@@ -298,8 +309,9 @@ export default function Home() {
               </button>
             </div>
           </div>
-          {/* 修复问题3：手机端右滑提示箭头 */}
-          <div className="slide-tip">》</div>
+          
+          {/* 可点击的右滑箭头 → 点击自动滑到下一个导航 */}
+          <div className="slide-tip" onClick={handleSlideRight}>》</div>
         </div>
 
         {/* 资源区域 */}
@@ -308,7 +320,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 弹窗全部保留原样 */}
+      {/* 弹窗 */}
       {selectedItem && (
         <div className="modal" onClick={() => setSelectedItem(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -407,7 +419,6 @@ export default function Home() {
           background:rgba(255,255,255,0.95);
         }
 
-        /* 导航栏核心布局 */
         .tabs-container{
           display:flex;
           justify-content:flex-start;
@@ -433,7 +444,7 @@ export default function Home() {
           white-space:nowrap;
           min-width:max-content;
         }
-        /* 修复问题3：右滑提示箭头样式 */
+        /* 可点击箭头样式 */
         .slide-tip{
           position:absolute;
           right:15px;
@@ -442,9 +453,11 @@ export default function Home() {
           font-size:20px;
           color:#4f46e5;
           font-weight:bold;
-          pointer-events:none;
+          pointer-events:auto; /* 允许点击 */
+          cursor:pointer;
           z-index:10;
         }
+        .slide-tip:hover{opacity:0.8;}
 
         .tab-item-wrapper{
           display:flex;
@@ -477,7 +490,6 @@ export default function Home() {
           margin-bottom:35px;
         }
 
-        /* 资源列表样式 */
         .resource-list{display:flex;flex-direction:column;gap:14px;}
         .list-row{
           position:relative;
@@ -516,7 +528,6 @@ export default function Home() {
           border-radius:8px;font-size:13px;
         }
 
-        /* 手机自适应 */
         @media (max-width:768px){
           .list-row{
             grid-template-columns:1fr;
@@ -528,7 +539,6 @@ export default function Home() {
           .tab-divider{font-size:16px;}
         }
 
-        /* 弹窗样式 完全保留 */
         .modal{
           position:fixed;top:0;left:0;width:100%;height:100%;
           background:rgba(0,0,0,0.7);z-index:999;
