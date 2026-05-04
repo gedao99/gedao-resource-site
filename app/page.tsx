@@ -234,7 +234,7 @@ export default function Home() {
       <div className="container">
         <div className="title">
           <h1>格道资源站</h1>
-          <p>破解版app丨AI教程丨副业项目</p>
+          <p>最新资源丨破解版app丨AI教程丨副业项目</p>
         </div>
         
         {/* 滚动公告轮播 完全保留 */}
@@ -252,17 +252,31 @@ export default function Home() {
           />
         </div>
 
-        {/* 导航栏：已移除右侧的查看更多按钮 */}
+        {/* 导航栏：查看更多放在最新资源正下方 */}
         <div className="tabs-container">
           <div className="tabs-wrapper">
             <div className="tabs">
-              <button 
-                className={`tab-btn ${activeTab === 'all' ? 'tab-active' : ''}`}
-                onClick={() => setActiveTab('all')}
-              >
-                最新资源
-              </button>
+              {/* 最新资源按钮 + 下方的查看更多 */}
+              <div className="tab-item-wrapper">
+                <button 
+                  className={`tab-btn ${activeTab === 'all' ? 'tab-active' : ''}`}
+                  onClick={() => setActiveTab('all')}
+                >
+                  最新资源
+                </button>
+                {/* 仅在选中最新资源时，在其正下方显示查看更多 */}
+                {activeTab === 'all' && (
+                  <button 
+                    className="tab-more-btn" 
+                    onClick={() => setShowMoreModal({ type: 'all', show: true })}
+                  >
+                    查看更多 →
+                  </button>
+                )}
+              </div>
+              
               <span className="tab-divider">丨</span>
+              
               <button 
                 className={`tab-btn ${activeTab === 'app' ? 'tab-active' : ''}`}
                 onClick={() => setActiveTab('app')}
@@ -290,18 +304,6 @@ export default function Home() {
         {/* 资源区域 */}
         <div className="section">
           {renderResourceList(finalList)}
-          
-          {/* 查看更多按钮：仅在最新资源标签下显示，放在列表底部 */}
-          {activeTab === 'all' && (
-            <div className="more-btn-container">
-              <button 
-                className="more-btn" 
-                onClick={() => setShowMoreModal({ type: 'all', show: true })}
-              >
-                查看更多 →
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
@@ -404,11 +406,11 @@ export default function Home() {
           background:rgba(255,255,255,0.95);
         }
 
-        /* 导航栏：已移除右侧查看更多 */
+        /* 导航栏核心布局 */
         .tabs-container{
           display:flex;
           justify-content:flex-start;
-          align-items:center;
+          align-items:flex-start;
           background:#ffffff !important;
           border-radius:16px 16px 0 0;
           padding:15px 20px;
@@ -424,11 +426,20 @@ export default function Home() {
         .tabs-wrapper::-webkit-scrollbar{display:none;}
         .tabs{
           display:flex;
-          align-items:center;
+          align-items:flex-start;
           gap:6px;
           white-space:nowrap;
           min-width:max-content;
         }
+
+        /* 最新资源按钮的包裹容器 */
+        .tab-item-wrapper{
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:4px;
+        }
+
         .tab-btn{
           background:none;border:none;
           font-size:17px;font-weight:bold;color:#666;
@@ -437,7 +448,17 @@ export default function Home() {
         }
         .tab-btn:hover{color:#4f46e5;background:#f0f4ff;}
         .tab-active{color:#4f46e5 !important;background:#eef2ff !important;}
-        .tab-divider{color:#ccc;font-size:17px;flex-shrink:0;}
+
+        /* 查看更多按钮：在最新资源正下方 */
+        .tab-more-btn{
+          background:none;border:none;
+          font-size:13px;color:#4f46e5;font-weight:bold;
+          cursor:pointer;
+          padding:0;
+        }
+        .tab-more-btn:hover{text-decoration:underline;}
+
+        .tab-divider{color:#ccc;font-size:17px;flex-shrink:0;align-self:center;}
 
         .section{
           background:#ffffff !important;
@@ -446,19 +467,6 @@ export default function Home() {
           box-shadow:0 4px 15px rgba(0,0,0,0.1);
           margin-bottom:35px;
         }
-
-        /* 查看更多按钮容器：居中显示在列表底部 */
-        .more-btn-container{
-          text-align:center;
-          margin-top:20px;
-          padding-top:10px;
-          border-top:1px solid #eee;
-        }
-        .more-btn{
-          font-size:15px;color:#4f46e5;font-weight:bold;
-          background:none;border:none;cursor:pointer;
-        }
-        .more-btn:hover{text-decoration:underline;}
 
         /* 资源列表样式 */
         .resource-list{display:flex;flex-direction:column;gap:14px;}
